@@ -30,24 +30,6 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 #**************************************************************************/
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-project(tiny_rtps)
 
-
-# Allow for controlling of building the test code or not
-set(BUILD_TESTS TRUE CACHE BOOL Enabling this will build all of the gtest
-  unit tests)
-
-if(BUILD_TESTS)
-  enable_testing()
-  add_subdirectory(tests)
-endif()
-
-# Allow for building the examples or not
-set(BUILD_EXAMPLES TRUE CACHE BOOL Enabling this will build all of examples 
-  found in src/examples)
-
-if(BUILD_EXAMPLES)
-  add_subdirectory(src/examples)
-endif()
+add_executable(simple_socket_example simple_socket.c)
 
