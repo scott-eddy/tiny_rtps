@@ -1,0 +1,9 @@
+# Ignore any builds
+/build
+
+# Ignore binaries 
+*.o
+*.a
+
+# Ignore vim temp files
+*.swp
