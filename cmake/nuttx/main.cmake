@@ -30,31 +30,41 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 #**************************************************************************/
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-project(tiny_rtps)
+#
 
-set(BUILD_NUTTX TRUE CACHE BOOL Enabling this will build NuttX)
+# ============================================================================#
+# This is the entry point for building NuttX 
+# force static lib build
+set(BUILD_SHARED_LIBS OFF)
 
-if(BUILD_NUTTX)
-  include(cmake/nuttx/main.cmake)
-endif()
+# Set the toolchain for ARM
+include(${CMAKE_CURRENT_LIST_DIR}/Toolchain-arm-none-eabi.cmake)
+
+# print full c compiler version
+execute_process(COMMAND ${CMAKE_C_COMPILER} --version
+		OUTPUT_VARIABLE c_compiler_version
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+		)
+STRING(REGEX MATCH "[^\n]*" c_compiler_version_short ${c_compiler_version})
+message(STATUS "C compiler: ${c_compiler_version_short}")
+
+# print full c++ compiler version
+execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
+		OUTPUT_VARIABLE cxx_compiler_version
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+		)
+STRING(REGEX MATCH "[^\n]*" cxx_compiler_version_short ${cxx_compiler_version})
+message(STATUS "C++ compiler: ${cxx_compiler_version_short}")
+
+# ============================================================================#
+# Enable ExternalProject CMake module
+include(ExternalProject)
+
+ExternalProject_Add(nuttx
+  PREFIX nuttx
+  SOURCE_DIR ${CMAKE_SOURCE_DIR}/nuttx
+  BUILD_COMMAND make)
 
 
 
-# Allow for controlling of building the test code or not
-set(BUILD_TESTS TRUE CACHE BOOL Enabling this will build all of the gtest
-  unit tests)
-
-if(BUILD_TESTS)
-  enable_testing()
-  add_subdirectory(tests)
-endif()
-
-# Allow for building the examples or not
-set(BUILD_EXAMPLES TRUE CACHE BOOL Enabling this will build all of examples 
-  found in src/examples)
-
-if(BUILD_EXAMPLES)
-  add_subdirectory(src/examples)
-endif()
 
