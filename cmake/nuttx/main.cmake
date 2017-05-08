@@ -60,11 +60,15 @@ message(STATUS "C++ compiler: ${cxx_compiler_version_short}")
 # Enable ExternalProject CMake module
 include(ExternalProject)
 
-ExternalProject_Add(nuttx
-  PREFIX nuttx
-  SOURCE_DIR ${CMAKE_SOURCE_DIR}/nuttx
-  BUILD_COMMAND make)
+message("PATH is : $ENV{PATH}")
+execute_process(COMMAND echo "This is a test")
 
+#ExternalProject_Add(NuttX_Glob
+#  GIT_REPOSITORY https://github.com/scott-eddy/NuttX_Glob
+#  SOURCE_DIR ${CMAKE_SOURCE_DIR}/NuttX_Glob
+#  BUILD_IN_SOURCE 1 
+#  INSTALL_COMMAND = ""
+#  BUILD_COMMAND make)
 
 
 

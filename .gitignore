@@ -7,3 +7,6 @@
 
 # Ignore vim temp files
 *.swp
+
+# Ignore the NuttX_Glob
+/NuttX_Glob

@@ -42,12 +42,18 @@ endif()
 
 
 # Allow for controlling of building the test code or not
-set(BUILD_TESTS TRUE CACHE BOOL Enabling this will build all of the gtest
-  unit tests)
+if (NOT BUILD_NUTTX)
+  # NuttX switches the C & C++ Toolchain to be arm-none-eabi which doesn't
+  # include threads.  
+  # TODO Here we should change back such that we can build NuttX
+  # and still build unit tests
+  set(BUILD_TESTS TRUE CACHE BOOL Enabling this will build all of the gtest
+    unit tests)
 
-if(BUILD_TESTS)
-  enable_testing()
-  add_subdirectory(tests)
+  if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+  endif()
 endif()
 
 # Allow for building the examples or not
