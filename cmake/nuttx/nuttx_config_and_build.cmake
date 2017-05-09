@@ -30,45 +30,48 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 #**************************************************************************/
+
+
+###
+# nuttx_config_and_build.cmake
+# ---------------------------
 #
-
-# ============================================================================#
-# This is the entry point for building NuttX 
-# force static lib build
-set(BUILD_SHARED_LIBS OFF)
-
-# Set the toolchain for ARM
-include(${CMAKE_CURRENT_LIST_DIR}/Toolchain-arm-none-eabi.cmake)
-
-# print full c compiler version
-execute_process(COMMAND ${CMAKE_C_COMPILER} --version
-		OUTPUT_VARIABLE c_compiler_version
-		OUTPUT_STRIP_TRAILING_WHITESPACE
-		)
-STRING(REGEX MATCH "[^\n]*" c_compiler_version_short ${c_compiler_version})
-message(STATUS "C compiler: ${c_compiler_version_short}")
-
-# print full c++ compiler version
-execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
-		OUTPUT_VARIABLE cxx_compiler_version
-		OUTPUT_STRIP_TRAILING_WHITESPACE
-		)
-STRING(REGEX MATCH "[^\n]*" cxx_compiler_version_short ${cxx_compiler_version})
-message(STATUS "C++ compiler: ${cxx_compiler_version_short}")
-
-# ============================================================================#
+###
+#-----------------------     Includes  ---------------------------------------#
 # Enable ExternalProject CMake module
 include(ExternalProject)
+# Allows setting of the toolchain
+include(${CMAKE_CURRENT_LIST_DIR}/set_toolchain_arm_none_eabi.cmake)
 
-message("PATH is : $ENV{PATH}")
-execute_process(COMMAND echo "This is a test")
 
-#ExternalProject_Add(NuttX_Glob
-#  GIT_REPOSITORY https://github.com/scott-eddy/NuttX_Glob
-#  SOURCE_DIR ${CMAKE_SOURCE_DIR}/NuttX_Glob
-#  BUILD_IN_SOURCE 1 
-#  INSTALL_COMMAND = ""
-#  BUILD_COMMAND make)
+#-----------------------------------------------------------------------------#
+# Change toolchain to compile for ARM
+set_toolchain_arm_none_eabi()
 
+#######
+# Add the external project, this specifies the download and build steps only
+# All other nuttx configuration, cleaning, etc is done below
+######
+ExternalProject_Add(NuttX_Glob
+  GIT_REPOSITORY https://github.com/scott-eddy/NuttX_Glob
+  SOURCE_DIR ${CMAKE_SOURCE_DIR}/NuttX_Glob
+  SOURCE_SUBDIR nuttx
+  # We configure the board with ./configure.sh in a seperate step 
+  # since the API for ExternalProject_Add_step makes speciffying the 
+  # working directory trivial
+  CONFIGURE_COMMAND ""   
+  BUILD_IN_SOURCE 1  
+  # Change to the nuttx dir and run make 
+  BUILD_COMMAND ${CMAKE_COMMAND} -E chdir nuttx make 
+  INSTALL_COMMAND ""
+  )
+
+ExternalProject_Add_Step(
+  NuttX_Glob configure_board
+  DEPENDEES download
+  DEPENDERS build
+  COMMAND bash configure.sh stm32f4discovery/usbnsh 
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/NuttX_Glob/nuttx/tools
+  )
 
 

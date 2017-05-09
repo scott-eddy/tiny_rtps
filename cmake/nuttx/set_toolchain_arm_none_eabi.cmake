@@ -1,3 +1,4 @@
+
 #*****************************************************************************
 #   Copyright (C) 2017 Edward Scott. All rights reserved.
 #   Authors: Edward Scott <eddy.scott88@gmail.com>
@@ -30,40 +31,42 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 #**************************************************************************/
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-project(tiny_rtps)
 
+####
+# Function set_toolchain_arm_none_eabi
+# ------------------------------------
+# This function sets C and C++ compiler to be arm-none-eabi and prints the 
+# version to the terminal
+#
+# included CMake:
+#   Toolchain-arm-none-eabi.cmake
+#
+# Variables set:
+#   CMAKE_C_COMPILER
+#   CMAKE_CXX_COMPILER 
+#   CMAKE_EXE_LINKER_FLAGS
+#
+####
+function(set_toolchain_arm_none_eabi)
+  set(BUILD_SHARED_LIBS OFF)
+  # Set the toolchain for ARM
+  include(${CMAKE_CURRENT_LIST_DIR}/Toolchain-arm-none-eabi.cmake)
 
-#-------------------- Build Configuration Variables  -------------------------#
-set(BUILD_NUTTX TRUE CACHE BOOL Enabling this will build NuttX)
+  # print full c compiler version
+  execute_process(COMMAND ${CMAKE_C_COMPILER} --version
+      OUTPUT_VARIABLE c_compiler_version
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+      )
+  STRING(REGEX MATCH "[^\n]*" c_compiler_version_short ${c_compiler_version})
+  message(STATUS "C compiler: ${c_compiler_version_short}")
 
-set(BUILD_TESTS TRUE CACHE BOOL Enabling this will build all of the gtest
-    unit tests)
+  # print full c++ compiler version
+  execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
+      OUTPUT_VARIABLE cxx_compiler_version
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+      )
+  STRING(REGEX MATCH "[^\n]*" cxx_compiler_version_short ${cxx_compiler_version})
+  message(STATUS "C++ compiler: ${cxx_compiler_version_short}")
+endfunction()
 
-set(BUILD_EXAMPLES TRUE CACHE BOOL Enabling this will build all of examples 
-  found in src/examples)
-
-if(BUILD_NUTTX)
-  include(cmake/nuttx/nuttx_config_and_build.cmake)
-endif()
-
-
-
-# Allow for controlling of building the test code or not
-if (NOT BUILD_NUTTX)
-  # NuttX switches the C & C++ Toolchain to be arm-none-eabi which doesn't
-  # include threads.  
-  # TODO Here we should change back such that we can build NuttX
-  # and still build unit tests
-
-  if(BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(tests)
-  endif()
-endif()
-
-# Allow for building the examples or not
-if(BUILD_EXAMPLES)
-  add_subdirectory(src/examples)
-endif()
-
+# ============================================================================#
