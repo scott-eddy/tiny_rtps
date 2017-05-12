@@ -68,10 +68,21 @@ ExternalProject_Add(NuttX_Glob
 
 ExternalProject_Add_Step(
   NuttX_Glob configure_board
-  DEPENDEES download
+  DEPENDEES copy_configuraiton
   DEPENDERS build
   COMMAND bash configure.sh stm32f4discovery/usbnsh 
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/NuttX_Glob/nuttx/tools
   )
 
+ExternalProject_Add_Step(
+  NuttX_Glob copy_configuraiton
+  DEPENDEES update
+  DEPENDERS configure_board
+  COMMAND cp -r ${CMAKE_SOURCE_DIR}/tiny_nuttx_configs/stm32f4discovery/ 
+  ${CMAKE_SOURCE_DIR}/NuttX_Glob/nuttx/configs/stm32f4discovery
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  )
 
+
+ADD_CUSTOM_TARGET(distclean
+  command git clean -fd ${CMAKE_SOURCE_DIR}/NuttX_Glob/nuttx)
