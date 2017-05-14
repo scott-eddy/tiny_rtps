@@ -34,5 +34,13 @@
 #ifndef TINY_SOCKET_H
 #define TINY_SOCKET_H
 
+#ifdef _WIN32
+
+  #include <winsock2.h>
+#else
+  // Apple, Linux, and NuttX have POSIX sockets and supply these headers
+  #include <sys/socket.h>
+  #include <arpa/inet.h>
+#endif
 
 #endif /* TINY_SOCKET_H*/

@@ -39,6 +39,12 @@ find_package(Threads REQUIRED)
 # Enable ExternalProject CMake module
 include(ExternalProject)
 
+# Prevent overriding the parent project's compiler/linker
+# settings on Windows
+if(WIN32)
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+endif()
+
 # Download and install GoogleTest
 ExternalProject_Add(
     gtest

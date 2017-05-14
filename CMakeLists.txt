@@ -33,15 +33,17 @@
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 project(tiny_rtps)
 
-include(${CMAKE_CURRENT_LIST_DIR}/cmake/toolchains/Toolchain-native.cmake)
-
+if(NOT WIN32)
+  # TODO: Toolchain native needs to support windows builds better
+  include(${CMAKE_CURRENT_LIST_DIR}/cmake/toolchains/Toolchain-native.cmake)
+endif()
 #-------------------- Build Configuration Variables  -------------------------#
 #set(BUILD_NUTTX FALSE CACHE BOOL Enabling this will build NuttX)
-set(BUILD_NUTTX FALSE)
+set(BUILD_NUTTX FALSE CACHE BOOL "Enabling this will build NuttX, only supported on *Nix systems")
 
-set(BUILD_TESTS TRUE)
+set(BUILD_TESTS TRUE CACHE BOOL "Enabling this will build Gtest unit tests")
 
-set(BUILD_EXAMPLES TRUE)
+set(BUILD_EXAMPLES TRUE CACHE BOOL "Enabling this will build the examples in src/examples")
 
 if(BUILD_NUTTX)
  include(cmake/nuttx/nuttx_config_and_build.cmake)
