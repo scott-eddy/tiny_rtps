@@ -43,46 +43,54 @@ include(ExternalProject)
 # Allows setting of the toolchain
 include(${CMAKE_CURRENT_LIST_DIR}/set_toolchain_arm_none_eabi.cmake)
 
-
+# --------------------------- fetch nuttx -----------------------------------#
+function(fetch_nuttx)
+  # Note: ExternalProject is used here basically just for downloading the 
+  # NuttX_Glob.  Nuttx requires so much additional configuration that 
+  ExternalProject_Add(NuttX_Glob
+    GIT_REPOSITORY https://github.com/scott-eddy/NuttX_Glob
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/NuttX_Glob
+    SOURCE_SUBDIR nuttx
+    # We configure the board with ./configure.sh in a seperate step 
+    # since the API for ExternalProject_Add_step makes speciffying the 
+    # working directory trivial
+    CONFIGURE_COMMAND ""   
+    BUILD_IN_SOURCE 1  
+    # Change to the nuttx dir and run make 
+    BUILD_COMMAND "" 
+    INSTALL_COMMAND ""
+    )
+endfunction()
+# ----------------------- copy nuttx configuration ---------------------------#
+function(copy_nuttx_config)
+  ExternalProject_Add_Step(
+    NuttX_Glob copy_configuraiton
+    DEPENDEES update
+    # Note: by wrapping these add_steps in a function we can't specify Dependers
+    # as they may not be a valid target yet.   
+    COMMAND cp -r ${CMAKE_SOURCE_DIR}/tiny_nuttx_configs/stm32f4discovery/ 
+    ${CMAKE_SOURCE_DIR}/NuttX_Glob/nuttx/configs/stm32f4discovery
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+endfunction()
+# ----------------------- copy nuttx configuration ---------------------------#
+function(run_nuttx_configure_script)
+  ExternalProject_Add_Step(
+    NuttX_Glob configure_board
+    DEPENDEES copy_configuraiton
+    # Note: by wrapping these add_steps in a function we can't specify Dependers
+    # as they may not be a valid target yet.   
+    COMMAND bash configure.sh stm32f4discovery/usbnsh 
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/NuttX_Glob/nuttx/tools
+    )
+endfunction()
 #-----------------------------------------------------------------------------#
 # Change toolchain to compile for ARM
 set_toolchain_arm_none_eabi()
-
-#######
-# Add the external project, this specifies the download and build steps only
-# All other nuttx configuration, cleaning, etc is done below
-######
-ExternalProject_Add(NuttX_Glob
-  GIT_REPOSITORY https://github.com/scott-eddy/NuttX_Glob
-  SOURCE_DIR ${CMAKE_SOURCE_DIR}/NuttX_Glob
-  SOURCE_SUBDIR nuttx
-  # We configure the board with ./configure.sh in a seperate step 
-  # since the API for ExternalProject_Add_step makes speciffying the 
-  # working directory trivial
-  CONFIGURE_COMMAND ""   
-  BUILD_IN_SOURCE 1  
-  # Change to the nuttx dir and run make 
-  BUILD_COMMAND ${CMAKE_COMMAND} -E chdir nuttx make 
-  INSTALL_COMMAND ""
-  )
-
-ExternalProject_Add_Step(
-  NuttX_Glob configure_board
-  DEPENDEES copy_configuraiton
-  DEPENDERS build
-  COMMAND bash configure.sh stm32f4discovery/usbnsh 
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/NuttX_Glob/nuttx/tools
-  )
-
-ExternalProject_Add_Step(
-  NuttX_Glob copy_configuraiton
-  DEPENDEES update
-  DEPENDERS configure_board
-  COMMAND cp -r ${CMAKE_SOURCE_DIR}/tiny_nuttx_configs/stm32f4discovery/ 
-  ${CMAKE_SOURCE_DIR}/NuttX_Glob/nuttx/configs/stm32f4discovery
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  )
+fetch_nuttx()
+copy_nuttx_config()
+run_nuttx_configure_script()
 
 
-ADD_CUSTOM_TARGET(distclean
-  command git clean -fd ${CMAKE_SOURCE_DIR}/NuttX_Glob/nuttx)
+
+

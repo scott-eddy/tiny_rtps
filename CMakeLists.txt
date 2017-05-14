@@ -33,20 +33,19 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(tiny_rtps)
 
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/toolchains/Toolchain-native.cmake)
 
 #-------------------- Build Configuration Variables  -------------------------#
-set(BUILD_NUTTX TRUE CACHE BOOL Enabling this will build NuttX)
+#set(BUILD_NUTTX FALSE CACHE BOOL Enabling this will build NuttX)
+set(BUILD_NUTTX FALSE)
 
-set(BUILD_TESTS TRUE CACHE BOOL Enabling this will build all of the gtest
-    unit tests)
+set(BUILD_TESTS TRUE)
 
-set(BUILD_EXAMPLES TRUE CACHE BOOL Enabling this will build all of examples 
-  found in src/examples)
+set(BUILD_EXAMPLES TRUE)
 
 if(BUILD_NUTTX)
-  include(cmake/nuttx/nuttx_config_and_build.cmake)
+ include(cmake/nuttx/nuttx_config_and_build.cmake)
 endif()
-
 
 
 # Allow for controlling of building the test code or not
@@ -55,8 +54,9 @@ if (NOT BUILD_NUTTX)
   # include threads.  
   # TODO Here we should change back such that we can build NuttX
   # and still build unit tests
-
+  message("meep")
   if(BUILD_TESTS)
+    message("w00t")
     enable_testing()
     add_subdirectory(tests)
   endif()

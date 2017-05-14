@@ -50,7 +50,7 @@
 function(set_toolchain_arm_none_eabi)
   set(BUILD_SHARED_LIBS OFF)
   # Set the toolchain for ARM
-  include(${CMAKE_CURRENT_LIST_DIR}/Toolchain-arm-none-eabi.cmake)
+  include(${CMAKE_SOURCE_DIR}/cmake/toolchains/Toolchain-arm-none-eabi.cmake)
 
   # print full c compiler version
   execute_process(COMMAND ${CMAKE_C_COMPILER} --version
