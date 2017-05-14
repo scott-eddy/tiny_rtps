@@ -35,6 +35,16 @@ sudo: false
 language:
   - c
 
+# Make sure that we have CMake 3.x
+addons:
+  apt:
+    sources:
+      - george-edison55-precise-backports # cmake 3.2.3 / doxygen 1.8.3
+    packages:
+      - cmake
+      - cmake-data
+
+    
 script:
   - mkdir build
   - cd build

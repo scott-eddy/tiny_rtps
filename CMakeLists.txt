@@ -30,7 +30,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 #**************************************************************************/
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 project(tiny_rtps)
 
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/toolchains/Toolchain-native.cmake)
