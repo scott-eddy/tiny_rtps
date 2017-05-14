@@ -54,9 +54,7 @@ if (NOT BUILD_NUTTX)
   # include threads.  
   # TODO Here we should change back such that we can build NuttX
   # and still build unit tests
-  message("meep")
   if(BUILD_TESTS)
-    message("w00t")
     enable_testing()
     add_subdirectory(tests)
   endif()
