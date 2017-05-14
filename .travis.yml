@@ -32,11 +32,10 @@
 #**************************************************************************/
 sudo: true 
 
+dist: trusty
+
 language:
   - c
-before_install:
-  sudo apt-get install curl
-
 
 # Make sure that we have CMake 3.x
 addons:
