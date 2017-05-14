@@ -10,3 +10,6 @@
 
 # Ignore the NuttX_Glob
 /NuttX_Glob
+
+# Ignore windows visual studio nonsense
+/.vs
