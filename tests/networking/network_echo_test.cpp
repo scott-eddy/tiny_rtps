@@ -84,26 +84,31 @@ TEST(EchoTest, ReadWriteInSecond){
   }
 
 
-  struct pollfd poll_fd[2];
+  struct pollfd poll_fd[1];
   memset(&poll_fd, '0', sizeof(poll_fd)); 
   poll_fd[0].fd = reader_fd;
   poll_fd[0].events = POLLIN;
-  poll_fd[1].fd = writer_fd;
-  poll_fd[1].events = POLLOUT;
   int rv; 
 
 
   socklen_t reader_len = sizeof(si_reader);
-  int count = 0;
-  while(1){
-    ++count;
-    rv = poll(&poll_fd[0], 2, 1000);
-    if(rv == -1){
-      FAIL() << "Polling failed!";
-    }else if(rv == 0){
-      FAIL() << "Failed to recieve a message within 1second";
-    }else{
-      // check for events on s1:
+  
+  // Write the message and attempt it read it on the other socket
+  int os_ret;
+  os_ret = sendto(writer_fd, message, message_len, 0, 
+                  (struct sockaddr*) &si_reader, reader_len); 
+  if( os_ret == -1){
+    FAIL() << "Failed sendto call";
+  }
+  
+  // Wait for 1 second on the reader waiting for the message
+  rv = poll(&poll_fd[0], 1, 1000); 
+  if(rv == -1){
+    FAIL() << "Polling failed!";
+  }else if(rv == 0){
+    FAIL() << "Failed to recieve a message within 1second";
+  }else{
+    // check for events on s1:
       if (poll_fd[0].revents & POLLIN) {
         if ((rx_len = recvfrom(reader_fd, buf, BUF_LEN, 
                 0, (struct sockaddr *) &si_writer, &reader_len)) == -1)
@@ -111,26 +116,9 @@ TEST(EchoTest, ReadWriteInSecond){
           FAIL() << "Failed recvfrom call";
         }
         ASSERT_STREQ(&message[0], &buf[0]);  
-        break;
       }
+  } // Successful poll
 
-      // check for events on s2:
-      if (poll_fd[1].revents & POLLOUT) {
-        //printf("Sending message\n");
-        
-        if (sendto(writer_fd,
-              message,
-              message_len, 
-              0, 
-              (struct sockaddr*) &si_reader, 
-              reader_len) == -1)
-        {
-          FAIL() << "Failed sendto call";
-        }
-      }
-    } // Successful poll
-    ASSERT_LT(count, 100) << "Read unsuccesful after 5 attempts";
-  } // Read & Write looop
 }
 
 int main(int argc, char **argv){
