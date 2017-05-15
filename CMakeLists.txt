@@ -37,9 +37,16 @@ if(NOT WIN32)
   # TODO: Toolchain native needs to support windows builds better
   include(${CMAKE_CURRENT_LIST_DIR}/cmake/toolchains/Toolchain-native.cmake)
 endif()
+
+# Note: for development purposes on visual studio if you want to launch 
+# an example in debug mode you need to set this variable from 
+# THIS CMakeList.txt, as it is the one that calls project()
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} 
+              PROPERTY VS_STARTUP_PROJECT win32_socket)
 #-------------------- Build Configuration Variables  -------------------------#
 #set(BUILD_NUTTX FALSE CACHE BOOL Enabling this will build NuttX)
-set(BUILD_NUTTX FALSE CACHE BOOL "Enabling this will build NuttX, only supported on *Nix systems")
+set(BUILD_NUTTX FALSE CACHE BOOL "Enabling this will build NuttX, 
+                                   only supported on *Nix systems")
 
 set(BUILD_TESTS TRUE CACHE BOOL "Enabling this will build Gtest unit tests")
 

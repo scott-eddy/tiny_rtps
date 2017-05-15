@@ -31,5 +31,9 @@
 #
 #**************************************************************************/
 
-add_executable(simple_socket_example simple_socket.c)
-
+if(WIN32)
+  add_executable(win32_socket win_32_echo_socket.c)
+  target_link_libraries(win32_socket wsock32 ws2_32)
+else()
+  add_executable(simple_socket_example simple_socket.c)
+endif()

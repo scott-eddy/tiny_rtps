@@ -13,3 +13,4 @@
 
 # Ignore windows visual studio nonsense
 /.vs
+/enc_temp_folder
