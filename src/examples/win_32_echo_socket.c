@@ -39,6 +39,7 @@
 #include <stdio.h>  // printf
 #include <winsock2.h> // SOCKET functionality
 
+#define BUF_LEN 256
 
 int main() {
   /**
@@ -55,8 +56,19 @@ int main() {
     return 1;
   }  
   
-  
+  // sockaddr_in is same as POSIX
+  struct sockaddr_in si_reader;
+  struct sockaddr_in si_writer;
 
+  char buf[BUF_LEN];
+ 
+  int message_len = 6; 
+  char message[6] = "Hello!"; 
+  
+  // TODO Why would you use 0 over IPPROTO_UDP (both are suppoted)
+  // Also SOCK_RDM looks like perfect discovery layer for rtps
+  SOCKET reader_fd = socket(AF_INET, SOCK_DGRAM, 0);
+  SOCKET writer_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 }
 
 

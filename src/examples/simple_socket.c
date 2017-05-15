@@ -53,10 +53,10 @@ int main(int argc, char **argv){
   struct sockaddr_in si_reader;
   struct sockaddr_in si_writer;
 
-  uint8_t buf[BUF_LEN];
+  char buf[BUF_LEN];
  
   int message_len = 6; 
-  uint8_t message[6] = "Hello!"; 
+  char message[6] = "Hello!"; 
 
   reader_fd = socket(AF_INET, SOCK_DGRAM, 0);
   if(reader_fd == -1){
