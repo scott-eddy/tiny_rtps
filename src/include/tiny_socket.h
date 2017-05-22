@@ -54,7 +54,7 @@
    * @brief WIN32 has has similar socket API as POSIX but reutrn as SOCKET
    * object rather than an inet file descripter
    */
-  typedef int SOCKET
+  typedef int SOCKET;
 #endif
 
 #endif /* TINY_SOCKET_H*/

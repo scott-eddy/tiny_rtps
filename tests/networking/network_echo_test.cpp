@@ -31,24 +31,28 @@
 
 ******************************************************************************/
 #include <gtest/gtest.h>
-#include <stdlib.h> // exit
-#include <string.h> // Memset
-#include <stdio.h>  // printf
-#include <netinet/in.h> // sockaddr_in
-#include <sys/socket.h> // socket()
-#include <errno.h>  //errno
-#include <arpa/inet.h> //inet_ntoa
-#include <poll.h> // poll()
+#include <tiny_socket.h>
+#include <poll.h>
 
 #define BUF_LEN 256
 
 TEST(EchoTest, ReadWriteInSecond){
-  int reader_fd;
-  int writer_fd;
-  int rx_len = 0;
-  struct sockaddr_in si_reader;
-  struct sockaddr_in si_writer;
+  // The SOCKET data type is win32 specific, but it acts very similarly
+  // to a POSIX file descriptor
+  SOCKET reader_fd;
+  SOCKET writer_fd;
 
+  // Zero initialize socket address input structures.  Note we have
+  // 3 inputs here:
+  // 1. si_reader: the socket address that will be bound to the reader_fd
+  // 2. si_writer: the socket address that will be bound to the writer_fd
+  // 3. si_writer_target: the address that will be used in the sendto()
+  //                      function.  This is necessary because winsock
+  //                      appears unable to sendto INADDR_ANY.  Therefore we
+  //                      must callout the target address as loopback
+  struct sockaddr_in si_reader = {0};
+  struct sockaddr_in si_writer= {0};
+  struct sockaddr_in si_writer_targ = {0};
   char buf[BUF_LEN];
  
   int message_len = 6; 
@@ -63,10 +67,7 @@ TEST(EchoTest, ReadWriteInSecond){
   if(writer_fd == -1){
     FAIL() << "Writer failed to initialize";
   }
-
-  memset(&si_reader, '0', sizeof(si_reader));
-  memset(&si_writer, '0', sizeof(si_writer));
-  
+ 
   si_reader.sin_family = AF_INET;
   si_reader.sin_addr.s_addr = INADDR_ANY;
   si_reader.sin_port = 2000;
@@ -90,13 +91,18 @@ TEST(EchoTest, ReadWriteInSecond){
   poll_fd[0].events = POLLIN;
   int rv; 
 
+  // The socket address that the writer will target.  This is the same port
+  // number as the reader but a specific address
+  si_writer_targ.sin_family = AF_INET;
+  si_writer_targ.sin_addr.s_addr = inet_addr("127.0.0.1");
+  si_writer_targ.sin_port = 2000;
 
-  socklen_t reader_len = sizeof(si_reader);
+  socklen_t writer_targ_len = sizeof(si_writer_targ);
   
   // Write the message and attempt it read it on the other socket
   int os_ret;
   os_ret = sendto(writer_fd, message, message_len, 0, 
-                  (struct sockaddr*) &si_reader, reader_len); 
+                  (struct sockaddr*) &si_reader, writer_targ_len); 
   if( os_ret == -1){
     FAIL() << "Failed sendto call";
   }
@@ -110,8 +116,9 @@ TEST(EchoTest, ReadWriteInSecond){
   }else{
     // check for events on s1:
       if (poll_fd[0].revents & POLLIN) {
+        int rx_len;
         if ((rx_len = recvfrom(reader_fd, buf, BUF_LEN, 
-                0, (struct sockaddr *) &si_writer, &reader_len)) == -1)
+                0, (struct sockaddr *) &si_writer, &writer_targ_len)) == -1)
         {
           FAIL() << "Failed recvfrom call";
         }
