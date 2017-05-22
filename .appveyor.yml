@@ -75,4 +75,4 @@ build_script:
   - mkdir build
   - cd build
   - cmake ..
-  - make build_and_test
+  - cmake --build . --target build_and_test 
