@@ -68,7 +68,7 @@ install:
   - set PATH=C:\projects\deps\cmake\bin;%PATH%
   - cmake --version
 
-before build:
+before_build:
   - cd C:\projects\tiny_rtps
 
 build_script:
