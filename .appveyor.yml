@@ -56,16 +56,7 @@ clone_folder: C:\projects\tiny_rtps
 
 
 install:
-  - cmake --version
-  ############################################################################
-  # All external dependencies are installed in C:\projects\deps
-  ############################################################################
-  - mkdir C:\projects\deps
-  - set CMAKE_URL="https://cmake.org/files/v3.7/cmake-3.7.2-win64-x64.zip"
-  - appveyor DownloadFile %CMAKE_URL% -FileName cmake.zip
-  - 7z x cmake.zip -oC:\projects\deps > nul
-  - move C:\projects\deps\cmake-* C:\projects\deps\cmake # Move to a version-agnostic directory
-  - set PATH=C:\projects\deps\cmake\bin;%PATH%
+  # Print what cmake was used to generate this build
   - cmake --version
 
 before_build:

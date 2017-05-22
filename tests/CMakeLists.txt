@@ -42,6 +42,10 @@ add_executable(socket_test networking/network_echo_test.cpp)
 
 target_link_libraries(socket_test ${GTEST_LIBRARIES})
 
+if(WIN32)
+  target_link_libraries(socket_test wsock32 ws2_32)
+endif()  
+
 add_test(SocketTest socket_test)
 add_custom_target(build_and_test COMMAND ${CMAKE_CTEST_COMMAND} -V
                   DEPENDS socket_test)
