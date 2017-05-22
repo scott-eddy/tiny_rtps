@@ -32,7 +32,6 @@
 ******************************************************************************/
 #include <gtest/gtest.h>
 #include <tiny_socket.h>
-#include <poll.h>
 
 #define BUF_LEN 256
 

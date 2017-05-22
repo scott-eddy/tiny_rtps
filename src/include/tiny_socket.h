@@ -49,7 +49,7 @@
   // Apple, Linux, and NuttX have POSIX sockets and supply these headers
   #include <sys/socket.h>
   #include <arpa/inet.h>
-
+  #include <poll.h>
   /**
    * @brief WIN32 has has similar socket API as POSIX but reutrn as SOCKET
    * object rather than an inet file descripter

@@ -49,7 +49,6 @@ branches:
     - master
 
 configuration:
-  - Debug
   - Release
 
 # clone directory
@@ -57,6 +56,7 @@ clone_folder: C:\projects\tiny_rtps
 
 
 install:
+  - cmake --version
   ############################################################################
   # All external dependencies are installed in C:\projects\deps
   ############################################################################
