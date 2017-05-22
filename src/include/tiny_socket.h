@@ -35,8 +35,16 @@
 #define TINY_SOCKET_H
 
 #ifdef _WIN32
-
   #include <winsock2.h>
+
+  // To print out errors we need to enable WSAGetLastError
+  #include <windows.h>
+
+  #define errno WSAGetLastError()
+  
+  // There is no socklen_t in winsock, it merely uses ints
+  typedef int socklen_t;
+
 #else
   // Apple, Linux, and NuttX have POSIX sockets and supply these headers
   #include <sys/socket.h>
@@ -46,7 +54,7 @@
    * @brief WIN32 has has similar socket API as POSIX but reutrn as SOCKET
    * object rather than an inet file descripter
    */
-  #define SOCKET int
+  typedef int SOCKET
 #endif
 
 #endif /* TINY_SOCKET_H*/

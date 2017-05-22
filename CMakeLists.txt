@@ -56,6 +56,8 @@ if(BUILD_NUTTX)
  include(cmake/nuttx/nuttx_config_and_build.cmake)
 endif()
 
+#-------------------- Tiny RTPS Sources  -------------------------#
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/include)
 
 # Allow for controlling of building the test code or not
 if (NOT BUILD_NUTTX)
