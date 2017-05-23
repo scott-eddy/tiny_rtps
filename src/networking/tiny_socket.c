@@ -30,37 +30,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ***************************************************************************/
-
-#ifndef TINY_SOCKET_H
-#define TINY_SOCKET_H
+#include "tiny_scoket.h"
 
 #ifdef _WIN32
-  #include <winsock2.h>
 
-  // To print out errors we need to enable WSAGetLastError
-  #include <windows.h>
-  
-  // There is no socklen_t in winsock, it merely uses ints
-  typedef int socklen_t;
+void sock_fd_poll(struct pollfd *fds, nfds_t nfds, int timeout){
+ 
+  for (int i = 0; i < nfds_t; ++i) {
 
-  typedef ULONG nfds_t;
+  }
+
+}
 #else
-  // Apple, Linux, and NuttX have POSIX sockets and supply these headers
-  #include <sys/socket.h>
-  #include <arpa/inet.h>
-  #include <poll.h>
-  /**
-   * @brief WIN32 has has similar socket API as POSIX but reutrn as SOCKET
-   * object rather than an inet file descripter
-   */
-  typedef int SOCKET;
-#endif
-  
-  /**
-   * @brief Since winsock does not support poll(), and since WSAPoll will
-   * not report failed connections we need to mask poll() and select()
-   * behind an api
-   */
-  void sock_fd_poll(struct pollfd *fds, nfds_t nfds, int timeout);
 
-#endif /* TINY_SOCKET_H*/
+
+#endif
+
+

@@ -50,7 +50,8 @@ set(BUILD_NUTTX FALSE CACHE BOOL "Enabling this will build NuttX,
 
 set(BUILD_TESTS TRUE CACHE BOOL "Enabling this will build Gtest unit tests")
 
-set(BUILD_EXAMPLES TRUE CACHE BOOL "Enabling this will build the examples in src/examples")
+set(BUILD_EXAMPLES TRUE CACHE BOOL 
+                      "Enabling this will build the examples in src/examples")
 
 if(BUILD_NUTTX)
  include(cmake/nuttx/nuttx_config_and_build.cmake)
@@ -58,6 +59,9 @@ endif()
 
 #-------------------- Tiny RTPS Sources  -------------------------#
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/include)
+
+add_library(tiny_socket
+            ${CMAKE_CURRENT_LIST_DIR}/src/networking/tiny_socket.c)
 
 # Allow for controlling of building the test code or not
 if (NOT BUILD_NUTTX)
