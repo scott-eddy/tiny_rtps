@@ -33,6 +33,11 @@
 
 #ifndef TINY_SOCKET_H
 #define TINY_SOCKET_H
+// Allow for incorporation into C++ programs
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 #ifdef _WIN32
   #include <winsock2.h>
@@ -63,4 +68,8 @@
    */
   int sock_fd_pollin(struct pollfd *fds, nfds_t nfds, int timeout);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* TINY_SOCKET_H*/
+
