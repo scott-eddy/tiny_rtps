@@ -107,7 +107,7 @@ TEST(EchoTest, ReadWriteInSecond){
   }
   
   // Wait for 1 second on the reader waiting for the message
-  rv = poll(&poll_fd[0], 1, 1000); 
+  rv = socket_fd_pollin(&poll_fd[0], 1, 1000); 
   if(rv == -1){
     FAIL() << "Polling failed!";
   }else if(rv == 0){

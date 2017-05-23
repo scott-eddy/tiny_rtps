@@ -40,7 +40,7 @@ include_directories(${GTEST_INCLUDE_DIRS})
 
 add_executable(socket_test networking/network_echo_test.cpp)
 
-target_link_libraries(socket_test ${GTEST_LIBRARIES})
+target_link_libraries(socket_test ${GTEST_LIBRARIES} tiny_socket)
 
 if(WIN32)
   target_link_libraries(socket_test wsock32 ws2_32)

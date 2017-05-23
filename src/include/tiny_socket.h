@@ -59,8 +59,8 @@
   /**
    * @brief Since winsock does not support poll(), and since WSAPoll will
    * not report failed connections we need to mask poll() and select()
-   * behind an api
+   * behind our own API
    */
-  void sock_fd_poll(struct pollfd *fds, nfds_t nfds, int timeout);
+  int sock_fd_pollin(struct pollfd *fds, nfds_t nfds, int timeout);
 
 #endif /* TINY_SOCKET_H*/

@@ -30,19 +30,36 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ***************************************************************************/
-#include "tiny_scoket.h"
+#include "tiny_socket.h"
 
 #ifdef _WIN32
 
-void sock_fd_poll(struct pollfd *fds, nfds_t nfds, int timeout){
- 
-  for (int i = 0; i < nfds_t; ++i) {
+int sock_fd_pollin(struct pollfd *fds, nfds_t nfds, int timeout){
 
+
+  if (nfds > FD_SETSIZE) {
+    struct fd_set reader_fd_set;
+    reader_fd_set.fd_count = nfds;
+    memcpy(&reader_fd_set.fd_array[0], fds->fd, sizeof(SOCKET)*nfds);
+    
+    // Linux timeout is in ms, select timeout is in timeval struct
+    struct timeval timeout_struct;
+    timeout_struct.tv_sec = timeout / 1000;
+    timeout_struct.tv_sec = (timeout % 1000) * 1000;
+    int num_events;
+    num_events = select(nfds, &reader_fd_set, 0,0, &timeout_struct);
+
+
+  } else {
+    // TODO
+    return -1;
   }
-
 }
 #else
-
+#include <poll.h>
+int sock_fd_pollin(struct pollfd *fds, nfds_t nfds, int timeout){
+  return poll(fds, nfds, timeout);
+}
 
 #endif
 
