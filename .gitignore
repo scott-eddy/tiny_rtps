@@ -1,12 +1,13 @@
 # Ignore any builds
 /build
 
-# Ignore binaries 
+# Ignore binaries
 *.o
 *.a
 
-# Ignore vim temp files
+# Ignore vim/IDE temp files
 *.swp
+*.DS_Store
 
 # Ignore the NuttX_Glob
 /NuttX_Glob
@@ -14,3 +15,6 @@
 # Ignore windows visual studio nonsense
 /.vs
 /enc_temp_folder
+
+# Ignore doxygen HTML
+/docs/doxygen

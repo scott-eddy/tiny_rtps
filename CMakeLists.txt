@@ -38,35 +38,37 @@ if(NOT WIN32)
   include(${CMAKE_CURRENT_LIST_DIR}/cmake/toolchains/Toolchain-native.cmake)
 endif()
 
-# Note: for development purposes on visual studio if you want to launch 
-# an example in debug mode you need to set this variable from 
+# Note: for development purposes on visual studio if you want to launch
+# an example in debug mode you need to set this variable from
 # THIS CMakeList.txt, as it is the one that calls project()
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} 
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
               PROPERTY VS_STARTUP_PROJECT win32_socket)
 #-------------------- Build Configuration Variables  -------------------------#
 #set(BUILD_NUTTX FALSE CACHE BOOL Enabling this will build NuttX)
-set(BUILD_NUTTX FALSE CACHE BOOL "Enabling this will build NuttX, 
+set(BUILD_NUTTX FALSE CACHE BOOL "Enabling this will build NuttX,
                                    only supported on *Nix systems")
 
-set(BUILD_TESTS TRUE CACHE BOOL "Enabling this will build Gtest unit tests")
+set(BUILD_TESTS FALSE CACHE BOOL "Enabling this will build Gtest unit tests")
 
-set(BUILD_EXAMPLES TRUE CACHE BOOL 
+set(BUILD_EXAMPLES false CACHE BOOL
                       "Enabling this will build the examples in src/examples")
+
+set(BUILD_DOCS TRUE CACHE BOOL "Generate Doxygen Files to doc/doxygen")
 
 if(BUILD_NUTTX)
  include(cmake/nuttx/nuttx_config_and_build.cmake)
 endif()
 
 #-------------------- Tiny RTPS Sources  -------------------------#
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/rtps/common)
 
-add_library(tiny_socket
-            ${CMAKE_CURRENT_LIST_DIR}/src/networking/tiny_socket.c)
+#add_library(tiny_socket
+#            ${CMAKE_CURRENT_LIST_DIR}/src/networking/tiny_socket.c)
 
 # Allow for controlling of building the test code or not
 if (NOT BUILD_NUTTX)
   # NuttX switches the C & C++ Toolchain to be arm-none-eabi which doesn't
-  # include threads.  
+  # include threads.
   # TODO Here we should change back such that we can build NuttX
   # and still build unit tests
   if(BUILD_TESTS)
@@ -80,3 +82,7 @@ if(BUILD_EXAMPLES)
   add_subdirectory(src/examples)
 endif()
 
+
+if(BUILD_DOCS)
+ include(cmake/doxygen.cmake)
+endif()
