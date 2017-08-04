@@ -30,14 +30,11 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 #**************************************************************************/
-
-
-
 find_package(Doxygen REQUIRED)
 
 set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/docs/doxygen)
 
 doxygen_add_docs(tiny_rtps
-    ${CMAKE_SOURCE_DIR}/src/rtps/common/guid.h
+    ${CMAKE_SOURCE_DIR}/src/include/rtps/common/guid.h
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
