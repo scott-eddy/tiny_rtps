@@ -33,6 +33,10 @@
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 project(tiny_rtps)
 
+# Make all the warnings
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/enable_strict_warnings.cmake)
+
+
 if(NOT WIN32)
   # TODO: Toolchain native needs to support windows builds better
   include(${CMAKE_CURRENT_LIST_DIR}/cmake/toolchains/Toolchain-native.cmake)
@@ -48,7 +52,7 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 set(BUILD_NUTTX FALSE CACHE BOOL "Enabling this will build NuttX,
                                    only supported on *Nix systems")
 
-set(BUILD_TESTS FALSE CACHE BOOL "Enabling this will build Gtest unit tests")
+set(BUILD_TESTS TRUE CACHE BOOL "Enabling this will build Gtest unit tests")
 
 set(BUILD_EXAMPLES false CACHE BOOL
                       "Enabling this will build the examples in src/examples")
@@ -60,7 +64,7 @@ if(BUILD_NUTTX)
 endif()
 
 #-------------------- Tiny RTPS Sources  -------------------------#
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/rtps/common)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/include/rtps/common)
 
 #add_library(tiny_socket
 #            ${CMAKE_CURRENT_LIST_DIR}/src/networking/tiny_socket.c)

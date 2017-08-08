@@ -38,14 +38,7 @@ endif()
 
 include_directories(${GTEST_INCLUDE_DIRS})
 
-add_executable(socket_test networking/network_echo_test.cpp)
 
-target_link_libraries(socket_test ${GTEST_LIBRARIES} tiny_socket)
-
-if(WIN32)
-  target_link_libraries(socket_test wsock32 ws2_32)
-endif()  
-
-add_test(SocketTest socket_test)
-add_custom_target(build_and_test COMMAND ${CMAKE_CTEST_COMMAND} -V
-                  DEPENDS socket_test)
+add_executable(guid_creation rtps/test_guid_creation.c)
+target_compile_definitions(guid_creation
+                           PUBLIC DYNAMIC_STRING_ALLOCATION)

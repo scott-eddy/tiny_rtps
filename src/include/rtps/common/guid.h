@@ -38,6 +38,8 @@
 extern "C"{
 #endif
 
+#include "platform_types.h"
+
 /**
  * @defgroup GUID_Constants Constants related to the RTPS Globally Unique ID
  * Note, these are preprocessor definitions by design, instead of static const,
@@ -46,9 +48,7 @@ extern "C"{
  */
 #define SIZE_GUID_PREFIX 12
 #define GUIDPREFIX_UNKNOWN {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}
-
 #define SIZE_ENTITY_ID_KEY 3
-
 /**
  * @defgroup RTPS_DEFINED_ENTITY_IDS
  * EntityId_t values fully predefined by the RTPS Protocol
@@ -67,22 +67,40 @@ extern "C"{
 #define ENTITYID_P2P_BUILTIN_PARTICIPANT_MESSAGE_WRITER 0x000200c2
 #define ENTITYID_P2P_BUILTIN_PARTICIPANT_MESSAGE_READER 0x000200c7
 /** @} */ // end RTPS_DEFINED_ENTITY_IDS
+
+#define GUID_UNKNOWN {GUIDPREFIX_UNKNOWN, ENTITYID_UNKNOWN}
 /** @} */ //end GUID_Constants
 
 /**
- * @brief The Globally Unique Identifier (GUID) attribute.  This is conforment
+ * @brief The Globally Unique Identifier (GUID) prefix.  This is conforment
  * to Section 9.3.1 of the [RTPS Wire Protocal Specification](http://www.omg.org/spec/DDSI-RTPS)
+ *
+ * implementations of the RTPS protocol are free to use any technique they deem
+ * appropriate to generate unique values for the guidPrefix as long as they meet
+ * the following constraint:
+ * guidPrefix[0] = vendorId[0]
+ * guidPrefix[1] = vendorId[1]
+ * Where vendorId is a value assigned by the Object Management Group
  */
 typedef struct GuidPrefix_t {
   octet value[SIZE_GUID_PREFIX];
 } GuidPrefix_t;
 
-
+/**
+ * @brief The unique identifier of an endpoint within a participant
+ */
 typedef struct EntityId_t {
   octet entityKey[SIZE_ENTITY_ID_KEY];
   octet entityKind;
-}
+} EntityId_t;
 
+/**
+ * @brief The Globally Unique Identifier GUID for a
+ */
+typedef struct GUID_t {
+  GuidPrefix_t guidPrefix;
+  EntityId_t entityId;
+} GUID_t;
 
 #ifdef __cplusplus
 }

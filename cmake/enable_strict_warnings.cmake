@@ -29,15 +29,15 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 #
-#**************************************************************************/
-find_package(Doxygen REQUIRED)
-
-set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/docs/doxygen)
-
-file(GLOB rtps_sources
-${CMAKE_SOURCE_DIR}/src/include/rtps/common/*.h)
-
-doxygen_add_docs(tiny_rtps
-    ${rtps_sources}
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    )
+#***************************************************************************
+if(MSVC)
+  # Force to always compile with W4
+  if(CMAKE_C_FLAGS MATCHES "/W[0-4]")
+    string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+  else()
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
+  endif()
+else()
+  # Update if necessary
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wpedantic -Werror")
+endif()
