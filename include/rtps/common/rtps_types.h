@@ -38,6 +38,8 @@ extern "C"{
 #endif
 
 #include "platform_types.h"
+#include "guid.h"
+
 /**
  * @defgroup RTPS_TYPES Types that appear within submessages or built-in topic
  * data.  Most descriptions pulled directly from the RTPS specification
@@ -86,7 +88,7 @@ typedef struct SequenceNumber_t {
   long high;
   unsigned long low;
 } SequenceNumber_t;
-#define SEQUENCENUMBER_UNKNOWN {-1,0}
+#define SEQUENCE_NUMBER_UNKNOWN {-1,0}
 
 /**
  * @brief A fragment number is a 32-bit unsigned integer and is used by
@@ -209,10 +211,10 @@ typedef struct ParameterId_t {
  * information to enable content filtering on the Writer side.
  */
 typedef struct ContentFilterProperty_t {
-  char contentFilteredTopicName[SIZE_CONTENT_FILTER_STRING];
-  char relatedTopicName[SIZE_CONTENT_FILTER_STRING];
-  char filterClassName[SIZE_CONTENT_FILTER_STRING];
-  RtpsString_t *expressionParameters; //TODO this is a string table, how best to handle this in C
+  octet contentFilteredTopicName[SIZE_CONTENT_FILTER_STRING];
+  octet relatedTopicName[SIZE_CONTENT_FILTER_STRING];
+  octet filterClassName[SIZE_CONTENT_FILTER_STRING];
+  RtpsString_t *expressionParameters; //TODO Eddy 2017, this is a string table, how best to handle this in C
   RtpsString_t filterExpression;
 } ContentFilterProperty_t;
 
@@ -230,7 +232,7 @@ typedef struct ContentFilterInfo_t {
 } ContentFilterInfo_t;
 
 /**
- * @brief //TODO the spec documentation on this type is lacking
+ * @brief //TODO Eddy 8/2017, the spec documentation on this type is lacking
  */
 typedef struct Property_t {
   RtpsString_t name;
@@ -284,6 +286,33 @@ typedef unsigned long BuiltinEndpointSet_t;
 #define DISC_BUILTIN_ENDPOINT_PARTICIPANT_STATE_DETECTOR 0x00000001 << 9;
 #define BUILTIN_ENDPOINT_PARTICIPANT_MESSAGE_DATA_WRITER 0x00000001 << 10;
 #define BUILTIN_ENDPOINT_PARTICIPANT_MESSAGE_DATA_READER 0x00000001 << 11;
+
+/**
+ * @brief Specialization of Locator_t used to hold UDP IPv4 locators using a
+ * more compact representation. Equivalent to Locator_t with kind set to
+ * LOCATOR_KIND_UDPv4.
+ * Need only be able to hold an IPv4 address and a port number.
+ *
+ * The mapping between the dot-notation “a.b.c.d” of an IPv4 address and its
+ * representation as an unsigned long is as follows:
+ * address = (((a*256 + b)*256) + c)*256 + d
+ */
+typedef struct LocatorUDPv4_t {
+  unsigned long address;
+  unsigned long port;
+} LocatorUDPv4_t;
+
+/**
+ * @brief
+ */
+ #define SIZE_SEQUENCE_NUM_SET_BITMAP 8
+typedef struct SequenceNumberSet_t {
+  SequenceNumber_t bitmapBase;
+  uint32_t numBits;
+  int32_t bitmap[8];
+} SequenceNumberSet_t;
+
+#define LOCATORUDPv4_INVALID {0, 0}
 
 /** @} */ // doxygen group RTPS_TYPES
 #ifdef __cplusplus

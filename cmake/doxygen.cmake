@@ -34,10 +34,13 @@ find_package(Doxygen REQUIRED)
 
 set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/docs/doxygen)
 
-file(GLOB rtps_sources
-${CMAKE_SOURCE_DIR}/src/include/rtps/common/*.h)
+file(GLOB rtps_includes
+${CMAKE_SOURCE_DIR}/include/rtps/common/*.h
+${CMAKE_SOURCE_DIR}/include/rtps/messages/*.h
+${CMAKE_SOURCE_DIR}/include/rtps/participant/*.h
+)
 
 doxygen_add_docs(tiny_rtps
-    ${rtps_sources}
+    ${rtps_includes}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )

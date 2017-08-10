@@ -39,6 +39,6 @@ endif()
 include_directories(${GTEST_INCLUDE_DIRS})
 
 
-add_executable(guid_creation rtps/test_guid_creation.c)
-target_compile_definitions(guid_creation
+add_executable(compile_test_includes rtps/compile_test_includes.c)
+target_compile_definitions(compile_test_includes
                            PUBLIC DYNAMIC_STRING_ALLOCATION)

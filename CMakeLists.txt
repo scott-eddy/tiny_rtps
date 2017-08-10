@@ -64,10 +64,15 @@ if(BUILD_NUTTX)
 endif()
 
 #-------------------- Tiny RTPS Sources  -------------------------#
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/include/rtps/common)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/common
+                    ${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/messages
+                    ${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/participant
+                    ${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/reader
+                    ${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/writer
+                  )
 
-#add_library(tiny_socket
-#            ${CMAKE_CURRENT_LIST_DIR}/src/networking/tiny_socket.c)
+add_library(rtps_lib
+${CMAKE_CURRENT_LIST_DIR}/src/rtps/participant/participant.c)
 
 # Allow for controlling of building the test code or not
 if (NOT BUILD_NUTTX)

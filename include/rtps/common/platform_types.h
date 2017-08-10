@@ -55,7 +55,7 @@ typedef int8_t octet;
 typedef struct RtpsString_t {
   //TODO should this be dynamically sized or fixed?
   size_t size;
-  char* text;
+  octet* text;
 } RtpsString_t;
 #else
 
@@ -65,7 +65,7 @@ typedef struct RtpsString_t {
 #define MAX_STRING_TEXT_SIZE 256
 typedef struct RtpsString_t {
   size_t size;
-  char text[256];
+  octet text[256];
 } RtpsString_t;
 
 #endif //DYNAMIC_STRING_ALLOCATION
