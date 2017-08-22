@@ -37,16 +37,42 @@
 
 static ParticipantFactory_t* participant_factory_singleton = NULL;
 
+/**
+ * @brief TODO fill this shit out!
+ */
+Participant_t* CreateParticipant(ParticipantFactory_t* factory, ParticipantAttributes_t* attributes){
+  if(factory->number_created_participants < MAX_NUMBER_PARTICIPANTS){
+    Participant_t* participant = malloc(sizeof(Participant_t));
+    participant->guid.guidPrefix.value[0] = 0x0;
+    participant->guid.guidPrefix.value[1] = 0x1;
+    participant->guid.guidPrefix.value[2] = 0x2;
+    participant->guid.guidPrefix.value[3] = 0x3;
+    participant->protocolVersion = PROTOCOLVERSION;
+    //participant->attributes = &attributes;
+
+    factory->number_created_participants++;
+    factory->participant_list[factory->number_created_participants] = participant;
+    return participant;
+  } else {
+    // TODO how to error
+    return NULL;
+  }
+
+}
+
 ParticipantFactory_t* GetInstance(void) {
   return participant_factory_singleton;
 }
 
-
 ParticipantFactory_t* ParticipantFactoryInit(void){
   if(participant_factory_singleton == NULL) {
-    participant_factory_singleton = malloc(sizeof(ParticipantFactory_t));
+    participant_factory_singleton = malloc(sizeof(ParticipantFactory_t)); //TODO dont malloc here, instead abstract
     participant_factory_singleton->GetInstance = &GetInstance;
-    participant_factory_singleton->CreateParticipant = NULL;
+    participant_factory_singleton->CreateParticipant = &CreateParticipant;
+    participant_factory_singleton->number_created_participants = NO_PARTICIPANTS_CREATED;
+    for(int i = 0; i < MAX_NUMBER_PARTICIPANTS; ++i) {
+      participant_factory_singleton->participant_list[i] = NULL;
+    }
   } else {
     // TODO Eddy 8/2017, we should likely log this as an error because it should
     // Only be called once

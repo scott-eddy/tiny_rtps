@@ -64,6 +64,10 @@ if(BUILD_NUTTX)
 endif()
 
 #-------------------- Tiny RTPS Sources  -------------------------#
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/code_coverage.cmake)
+APPEND_COVERAGE_COMPILER_FLAGS()
+
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/common
                     ${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/messages
                     ${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/participant
@@ -72,7 +76,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/common
                   )
 
 add_library(rtps_lib
-${CMAKE_CURRENT_LIST_DIR}/src/rtps/participant/participant.c)
+${CMAKE_CURRENT_LIST_DIR}/src/rtps/participant/participant_factory.c)
+
 
 # Allow for controlling of building the test code or not
 if (NOT BUILD_NUTTX)

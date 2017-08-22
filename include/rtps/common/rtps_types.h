@@ -169,11 +169,11 @@ typedef struct ProtocolVersion_t {
   octet major;
   octet minor;
 } ProtocolVersion_t;
-#define PROTOCOLVERSION_1_0 {1,0}
-#define PROTOCOLVERSION_1_1 {1,1}
-#define PROTOCOLVERSION_2_0 {2,0}
-#define PROTOCOLVERSION_2_1 {2,1}
-#define PROTOCOLVERSION_2_2 {2,2}
+#define PROTOCOLVERSION_1_0 (ProtocolVersion_t) {1,0}
+#define PROTOCOLVERSION_1_1 (ProtocolVersion_t) {1,1}
+#define PROTOCOLVERSION_2_0 (ProtocolVersion_t) {2,0}
+#define PROTOCOLVERSION_2_1 (ProtocolVersion_t) {2,1}
+#define PROTOCOLVERSION_2_2 (ProtocolVersion_t) {2,2}
 #define PROTOCOLVERSION PROTOCOLVERSION_2_2
 
 

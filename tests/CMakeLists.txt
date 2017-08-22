@@ -38,7 +38,14 @@ endif()
 
 include_directories(${GTEST_INCLUDE_DIRS})
 
-
-add_executable(compile_test_includes rtps/compile_test_includes.c)
-target_compile_definitions(compile_test_includes
+add_executable(participant_creation_tests rtps/participant_creation_tests.cpp)
+target_compile_definitions(participant_creation_tests
                            PUBLIC DYNAMIC_STRING_ALLOCATION)
+target_link_libraries(participant_creation_tests rtps_lib gtest gtest_main)
+
+
+ SETUP_TARGET_FOR_COVERAGE(
+     NAME testrunner_coverage                    # New target name
+     EXECUTABLE participant_creation_tests -j ${PROCESSOR_COUNT} # Executable in PROJECT_BINARY_DIR
+     DEPENDENCIES participant_creation_tests                     # Dependencies to build first
+ )

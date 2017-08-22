@@ -54,7 +54,7 @@ typedef struct ParticipantAttributes_t {
  */
 typedef struct Participant_t {
   GUID_t guid;
-  ProtocolVersion_t protocalVersion;
+  ProtocolVersion_t protocolVersion;
   VendorId_t vendorId;
   ParticipantAttributes_t attributes;
   Locator_t* defaultUnicastLocatorList;
@@ -66,9 +66,13 @@ typedef struct Participant_t {
 /**
  * @ brief factory class used in creation of an RTPS Participant_t
  */
+#define MAX_NUMBER_PARTICIPANTS 1
+#define NO_PARTICIPANTS_CREATED -1
 typedef struct ParticipantFactory_t {
   struct ParticipantFactory_t* (*GetInstance)(void);
-  Participant_t* (*CreateParticipant)(ParticipantAttributes_t*);
+  Participant_t* (*CreateParticipant)(struct ParticipantFactory_t*,  ParticipantAttributes_t*);
+  Participant_t* participant_list[MAX_NUMBER_PARTICIPANTS];
+  int number_created_participants;
 } ParticipantFactory_t;
 
 ParticipantFactory_t* ParticipantFactoryInit(void);
