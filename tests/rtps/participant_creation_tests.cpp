@@ -7,7 +7,7 @@ TEST(ParticipantTesting, FactoryCreationDestruction){
   // Act
   ParticipantFactory_t* participant_factory = ParticipantFactoryInit();
   // Assert
-  //ASSERT_NE(NULL, participant_factory);
+  ASSERT_TRUE((participant_factory != NULL));
 }
 
 

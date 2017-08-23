@@ -44,9 +44,11 @@ target_compile_definitions(participant_creation_tests
 target_link_libraries(participant_creation_tests rtps_lib gtest gtest_main)
 
 # Don't include /usr libraries in coverage
-set(COVERAGE_EXCLUDES '/usr/*')
- SETUP_TARGET_FOR_COVERAGE(
-     NAME coverage_participants                    # New target name
-     EXECUTABLE participant_creation_tests -j ${PROCESSOR_COUNT} # Executable in PROJECT_BINARY_DIR
-     DEPENDENCIES participant_creation_tests                     # Dependencies to build first
- )
+if(BUILD_COVERAGE)
+  set(COVERAGE_EXCLUDES '/usr/*')
+   SETUP_TARGET_FOR_COVERAGE(
+       NAME coverage_participants                    # New target name
+       EXECUTABLE participant_creation_tests -j ${PROCESSOR_COUNT} # Executable in PROJECT_BINARY_DIR
+       DEPENDENCIES participant_creation_tests                     # Dependencies to build first
+   )
+endif()

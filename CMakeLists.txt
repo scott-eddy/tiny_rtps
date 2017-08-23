@@ -56,18 +56,19 @@ set(BUILD_TESTS TRUE CACHE BOOL "Enabling this will build Gtest unit tests")
 
 set(BUILD_EXAMPLES false CACHE BOOL
                       "Enabling this will build the examples in src/examples")
-
 set(BUILD_DOCS TRUE CACHE BOOL "Generate Doxygen Files to doc/doxygen")
+
+set(BUILD_COVERAGE FALSE CACHE BOOL "Generate covearge with gcov and lcov")
 
 if(BUILD_NUTTX)
  include(cmake/nuttx/nuttx_config_and_build.cmake)
 endif()
 
+if(BUILD_COVERAGE)
+  include(${CMAKE_CURRENT_LIST_DIR}/cmake/code_coverage.cmake)
+  APPEND_COVERAGE_COMPILER_FLAGS()
+endif()
 #-------------------- Tiny RTPS Sources  -------------------------#
-include(${CMAKE_CURRENT_LIST_DIR}/cmake/code_coverage.cmake)
-APPEND_COVERAGE_COMPILER_FLAGS()
-
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/common
                     ${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/messages
                     ${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/participant
