@@ -82,14 +82,19 @@ endif() # NOT GCOV_PATH
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
     if("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS 3)
         message(FATAL_ERROR "Clang version must be 3.0.0 or greater! Aborting...")
+    else()
+      message("Setting Compiler flags for Clang")
+      set(COVERAGE_COMPILER_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage"
+        CACHE INTERNAL "")
     endif()
 elseif(NOT CMAKE_COMPILER_IS_GNUCXX)
+    message("Setting Compiler flags for GCC")
     message(FATAL_ERROR "Compiler is not GNU gcc! Aborting...")
-endif()
-
-#--coverage  TODO this is not used in clang?
-set(COVERAGE_COMPILER_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage"
+else()
+  # We have GNU gcc, add the coverage flags
+  set(COVERAGE_COMPILER_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage --coverage"
     CACHE INTERNAL "")
+endif()
 
 set(CMAKE_CXX_FLAGS_COVERAGE
     ${COVERAGE_COMPILER_FLAGS}
@@ -120,7 +125,8 @@ endif() # NOT CMAKE_BUILD_TYPE STREQUAL "Debug"
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
     link_libraries(gcov)
 else()
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+    # Silence this for warnings with Clang
+    #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 endif()
 
 # Defines a target for running and collection code coverage information
@@ -158,9 +164,10 @@ function(SETUP_TARGET_FOR_COVERAGE)
         COMMAND ${Coverage_EXECUTABLE}
 
         # Capturing lcov counters and generating report
-        COMMAND ${LCOV_PATH} --directory . --capture --output-file ${Coverage_NAME}.info
-        COMMAND ${LCOV_PATH} --remove ${Coverage_NAME}.info ${COVERAGE_EXCLUDES} --output-file ${Coverage_NAME}.info.cleaned
-        COMMAND ${GENHTML_PATH} -o ${Coverage_NAME} ${Coverage_NAME}.info.cleaned
+        #--rc lcov_branch_coverage=1
+        COMMAND ${LCOV_PATH} --rc lcov_branch_coverage=1 --directory . --capture --output-file ${Coverage_NAME}.info
+        COMMAND ${LCOV_PATH} --rc lcov_branch_coverage=1 --remove ${Coverage_NAME}.info ${COVERAGE_EXCLUDES} --output-file ${Coverage_NAME}.info.cleaned
+        COMMAND ${GENHTML_PATH} --rc lcov_branch_coverage=1 -o ${Coverage_NAME} ${Coverage_NAME}.info.cleaned
         COMMAND ${CMAKE_COMMAND} -E remove ${Coverage_NAME}.info ${Coverage_NAME}.info.cleaned
 
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
