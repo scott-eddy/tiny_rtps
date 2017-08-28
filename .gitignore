@@ -8,6 +8,8 @@
 # Ignore vim/IDE temp files
 *.swp
 *.DS_Store
+.idea/
+cmake-build-debug
 
 # Ignore the NuttX_Glob
 /NuttX_Glob
