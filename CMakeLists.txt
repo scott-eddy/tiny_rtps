@@ -78,6 +78,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/common
 
 add_library(rtps_lib
 ${CMAKE_CURRENT_LIST_DIR}/src/rtps/participant/participant_factory.c)
+set_property(TARGET rtps_lib PROPERTY C_STANDARD 11)
 
 
 # Allow for controlling of building the test code or not

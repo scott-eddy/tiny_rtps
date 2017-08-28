@@ -32,7 +32,7 @@
 #**************************************************************************/
 find_package(GTest)
 
-if (NOT GTEST_FOUND)
+if (NOT ${GTEST_FOUND})
   include(cmake/download_gtest.cmake)
 endif()
 
@@ -41,7 +41,7 @@ include_directories(${GTEST_INCLUDE_DIRS})
 add_executable(participant_creation_tests rtps/participant_creation_tests.cpp)
 target_compile_definitions(participant_creation_tests
                            PUBLIC DYNAMIC_STRING_ALLOCATION)
-target_link_libraries(participant_creation_tests rtps_lib gtest gtest_main)
+                         target_link_libraries(participant_creation_tests rtps_lib ${GTEST_BOTH_LIBRARIES})
 
 # Don't include /usr libraries in coverage
 if(BUILD_COVERAGE)
