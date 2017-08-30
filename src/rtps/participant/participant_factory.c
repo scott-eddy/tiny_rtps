@@ -34,21 +34,30 @@
 
 #include "participant.h"
 #include <stdlib.h>
+#include <string.h>
 
 static ParticipantFactory_t* participant_factory_singleton = NULL;
 
 /**
- * @brief TODO fill this shit out!
+ * TODO good docs
+ * @brief
+ * @param guid_prefix_value
+ */
+void AssignTinyVendorId(octet* guid_prefix_value){
+  VendorId_t tiny_rtps_id = {VENDORID_TINY_RTPS};
+  memcpy(guid_prefix_value, &tiny_rtps_id, sizeof(tiny_rtps_id));
+}
+
+/**
+ * @brief TODO good docs
  */
 Participant_t* CreateParticipant(ParticipantFactory_t* factory, ParticipantAttributes_t* attributes){
   if(factory->number_created_participants < MAX_NUMBER_PARTICIPANTS){
     Participant_t* participant = malloc(sizeof(Participant_t));
-    participant->guid.guidPrefix.value[0] = 0x0;
-    participant->guid.guidPrefix.value[1] = 0x1;
-    participant->guid.guidPrefix.value[2] = 0x2;
-    participant->guid.guidPrefix.value[3] = 0x3;
-    participant->protocolVersion = PROTOCOLVERSION;
-    //participant->attributes = &attributes;
+    memset(participant, 0, sizeof(*participant));
+    AssignTinyVendorId(participant->guid.guidPrefix.value);
+    participant->guid.entityId = (EntityId_t) ENTITYID_PARTICIPANT;
+    participant->protocolVersion = (ProtocolVersion_t)PROTOCOLVERSION;
 
     factory->number_created_participants++;
     factory->participant_list[factory->number_created_participants] = participant;

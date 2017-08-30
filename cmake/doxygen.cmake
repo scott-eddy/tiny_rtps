@@ -40,7 +40,11 @@ ${CMAKE_SOURCE_DIR}/include/rtps/messages/*.h
 ${CMAKE_SOURCE_DIR}/include/rtps/participant/*.h
 )
 
+if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 3.9)
 doxygen_add_docs(tiny_rtps
     ${rtps_includes}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
+else()
+message(WARNING "Creating doxygen documentation requires CMake 3.9 or above. Skipping")
+endif()

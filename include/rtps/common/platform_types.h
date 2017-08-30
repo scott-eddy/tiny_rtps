@@ -45,7 +45,7 @@ extern "C"{
 /**
  * @brief Type used to represent an integer composed of 8 bits
  */
-typedef int8_t octet;
+typedef uint8_t octet;
 
 
 #ifdef DYNAMIC_STRING_ALLOCATION

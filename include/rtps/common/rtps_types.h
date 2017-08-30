@@ -63,7 +63,16 @@ typedef struct Time_t {
 #define TIME_INVALID {-1, 0xffffffff}
 #define TIME_INFINITE {0x7fffffff, 0xffffffff}
 
+/**
+ * @defgroup VendorIDs
+ *  the vendor id bytes of OMG RTPS vendors.  The VENDORID_TIY_RTPS is 117, 17 chosen arbitrarily
+ * @{
+ */
 #define SIZE_VENDOR_ID 2
+#define VENDORID_UNKNOWN {0,0}
+#define VENDORID_TINY_RTPS {0x75, 0x11}
+/** @} */ // end VendorIds
+
 /**
  * @brief The vendorId identifies the vendor of the middleware that implemented
  * the RTPS protocol and allows this vendor to add specific extensions to the
@@ -169,11 +178,11 @@ typedef struct ProtocolVersion_t {
   octet major;
   octet minor;
 } ProtocolVersion_t;
-#define PROTOCOLVERSION_1_0 (ProtocolVersion_t) {1,0}
-#define PROTOCOLVERSION_1_1 (ProtocolVersion_t) {1,1}
-#define PROTOCOLVERSION_2_0 (ProtocolVersion_t) {2,0}
-#define PROTOCOLVERSION_2_1 (ProtocolVersion_t) {2,1}
-#define PROTOCOLVERSION_2_2 (ProtocolVersion_t) {2,2}
+#define PROTOCOLVERSION_1_0 {1,0}
+#define PROTOCOLVERSION_1_1 {1,1}
+#define PROTOCOLVERSION_2_0 {2,0}
+#define PROTOCOLVERSION_2_1 {2,1}
+#define PROTOCOLVERSION_2_2 {2,2}
 #define PROTOCOLVERSION PROTOCOLVERSION_2_2
 
 
