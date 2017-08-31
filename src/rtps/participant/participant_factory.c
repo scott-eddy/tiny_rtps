@@ -36,6 +36,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * @brief The static particpant factory object. This is accessed via the call to RTPS_ParticipantFactory_GetInstance()
+ */
 static ParticipantFactory_t* participant_factory_singleton = NULL;
 
 /**
@@ -69,22 +72,32 @@ Participant_t* CreateParticipant(ParticipantFactory_t* factory, ParticipantAttri
 
 }
 
-ParticipantFactory_t* GetInstance(void) {
-  return participant_factory_singleton;
-}
-
-ParticipantFactory_t* ParticipantFactoryInit(void){
+ParticipantFactory_t* ParticipantFactory_GetInstance(void){
   if(participant_factory_singleton == NULL) {
     participant_factory_singleton = malloc(sizeof(ParticipantFactory_t)); //TODO dont malloc here, instead abstract
-    participant_factory_singleton->GetInstance = &GetInstance;
     participant_factory_singleton->CreateParticipant = &CreateParticipant;
     participant_factory_singleton->number_created_participants = NO_PARTICIPANTS_CREATED;
     for(int i = 0; i < MAX_NUMBER_PARTICIPANTS; ++i) {
       participant_factory_singleton->participant_list[i] = NULL;
     }
-  } else {
-    // TODO Eddy 8/2017, we should likely log this as an error because it should
-    // Only be called once
   }
   return participant_factory_singleton;
 }
+
+
+
+/**
+ * @brief TODO good docs
+ * @return
+ */
+RTPS_ReturnCode_t ParticipantFactory_Finalize() {
+  RTPS_ReturnCode_t ret = RTPS_RETCODE_ERROR;
+  if (participant_factory_singleton == NULL) {
+    ret = RTPS_RETCODE_OK;
+  } else {
+    free(participant_factory_singleton); // TODO don't blindly free here, need to check that all participants created by factory are destroyed properly
+    ret = RTPS_RETCODE_OK;
+  }
+  return ret;
+}
+

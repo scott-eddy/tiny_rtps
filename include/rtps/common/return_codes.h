@@ -30,69 +30,40 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ***************************************************************************/
-#ifndef TINY_RTPS_PARTICIPANT_H
-#define TINY_RTPS_PARTICIPANT_H
-
-#include "rtps_types.h"
-#include "reader.h"
-#include "writer.h"
-#include "return_codes.h"
+#ifndef TINY_RTPS_RETURN_CODES_H
+#define TINY_RTPS_RETURN_CODES_H
 
 #ifdef __cplusplus
 extern "C"{
 #endif
 
-/**
- * @brief Attributes not dictated by the RTPS specificatin but necessary for the
- * implementation of the protocol
- */
-typedef struct ParticipantAttributes_t {
-  unsigned int domain_id;
-} ParticipantAttributes_t;
+typedef enum RTPS_ReturnCode_t{
+  /**
+   * @brief The function succeeded with no errors
+   */
+  RTPS_RETCODE_OK,
 
-/**
- * @brief an RTPS participant
- */
-typedef struct Participant_t {
-  GUID_t guid;
-  ProtocolVersion_t protocolVersion;
-  VendorId_t vendorId;
-  ParticipantAttributes_t attributes;
-  Locator_t* defaultUnicastLocatorList;
-  Locator_t* defaultMulticastLocatorList;
-  RTPS_Writer_t* writer_list;
-  RTPS_Reader_t* reader_list;
-} Participant_t;
+  /**
+   * @brief General, unspecified error occured
+   */
+  RTPS_RETCODE_ERROR,
 
-/**
- * @ brief factory class used in creation of an RTPS Participant_t
- */
-#define MAX_NUMBER_PARTICIPANTS 1
-#define NO_PARTICIPANTS_CREATED -1
-typedef struct ParticipantFactory_t {
-  Participant_t* (*CreateParticipant)(struct ParticipantFactory_t*,  ParticipantAttributes_t*);
-  Participant_t* participant_list[MAX_NUMBER_PARTICIPANTS];
-  int number_created_participants;
-} ParticipantFactory_t;
+  /**
+   * @brief A value of the parameter that is passed in has an illegal value.  This might include a NULL pointer being
+   *        passed in or a value that is out of range
+   */
+  RTPS_RETCODE_BAD_PARAMETER,
 
-/**
- * TODO good docs
- * @brief
- * @return
- */
-ParticipantFactory_t* ParticipantFactory_GetInstance(void);
+  /**
+   * @brief tiny_rtps ran out of the resource(s) needed to complete the operation
+   */
+  RTPS_RETCODE_OUT_OF_RESOURCES
 
-#define RTPS_ParticipantFactory ParticipantFactory_GetInstance()
+} RTPS_ReturnCode_t;
 
-
-/**
- * @brief TODO good docs
- * @return
- */
-RTPS_ReturnCode_t ParticipantFactory_Finalize();
 
 
 #ifdef __cplusplus
 }
 #endif
-#endif //TINY_RTPS_PARTICIPANT_H
+#endif //TINY_RTPS_RETURN_CODES_H
