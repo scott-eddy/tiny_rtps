@@ -52,7 +52,7 @@ void AssignTinyVendorId(octet* guid_prefix_value){
  * @brief TODO good docs
  */
 Participant_t* CreateParticipant(ParticipantFactory_t* factory, ParticipantAttributes_t* attributes){
-  if(factory->number_created_participants < MAX_NUMBER_PARTICIPANTS){
+    if(factory->number_created_participants < MAX_NUMBER_PARTICIPANTS){
     Participant_t* participant = malloc(sizeof(Participant_t));
     memset(participant, 0, sizeof(*participant));
     AssignTinyVendorId(participant->guid.guidPrefix.value);
