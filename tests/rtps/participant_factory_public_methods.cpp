@@ -33,12 +33,49 @@
 #include <gtest/gtest.h>
 #include "participant_factory.h"
 
-TEST(ParticipantFactoryPublicTesting, FactoryCreation){
+TEST(ParticipantFactoryPublicTesting, ParticipantCreation) {
   // Arrange
   RTPS_ReturnCode_t ret = RTPS_RETCODE_ERROR;
-  if(RTPS_ParticipantFactory) {
+  if(RTPS_ParticipantFactory){
+    FAIL() << "Invalid test, expected the RTPS Participant Factory to not exist";
+  }
+  Participant_t* participant_ptr = NULL;
+
+}
+
+/**
+ * @brief Tests that a newly initialized participant factory can be finalized
+ */
+TEST(ParticipantFactoryPublicTesting, EmptyFactoryDestruction) {
+  // Arrange
+  RTPS_ReturnCode_t ret = RTPS_RETCODE_ERROR;
+  ret = RTPS_ParticipantFactory_Init();
+  if (ret) {
+    FAIL() << "Invalid test, problem initializing the singleton factory";
+  }
+  ASSERT_EQ(0, RTPS_ParticipantFactory->number_active_participants)
+                << "Invalid test, expected factory to have no active participants";
+
+  // Act
+  ret = ParticipantFactory_Finalize();
+
+  // Assert
+  ASSERT_EQ(RTPS_RETCODE_OK, ret);
+  ASSERT_TRUE((ParticipantFactory_GetInstance() == NULL));
+  ParticipantFactory_Finalize();
+}
+
+/**
+ * @brief Test that the ParticipantFactroy can be created successfully
+ */
+TEST(ParticipantFactoryPublicTesting, FactoryCreation) {
+  // Arrange
+  RTPS_ReturnCode_t ret = RTPS_RETCODE_ERROR;
+  if (RTPS_ParticipantFactory) {
     ret = ParticipantFactory_Finalize();
-    ASSERT_EQ(RTPS_RETCODE_OK, ret) << "Invalid test, problem setting up static instance of participant factory";
+    if (ret) {
+      FAIL() << "Invalid test, problem setting up static instance of participant factory";
+    }
   }
 
   // Act
@@ -47,25 +84,10 @@ TEST(ParticipantFactoryPublicTesting, FactoryCreation){
   // Assert
   ASSERT_TRUE((ParticipantFactory_GetInstance() != NULL));
   ASSERT_EQ(RTPS_RETCODE_OK, ret);
+  ParticipantFactory_Finalize();
 }
 
-TEST(ParticipantFactoryPublicTesting, FactoryCreation){
-  // Arrange
-  RTPS_ReturnCode_t ret = RTPS_RETCODE_ERROR;
-  if(RTPS_ParticipantFactory) {
-    ret = ParticipantFactory_Finalize();
-    ASSERT_EQ(RTPS_RETCODE_OK, ret) << "Invalid test, problem setting up static instance of participant factory";
-  }
-
-  // Act
-  ret = RTPS_ParticipantFactory_Init();
-
-  // Assert
-  ASSERT_TRUE((ParticipantFactory_GetInstance() != NULL));
-  ASSERT_EQ(RTPS_RETCODE_OK, ret);
-}
-
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   int ret = RUN_ALL_TESTS();
   return 0;

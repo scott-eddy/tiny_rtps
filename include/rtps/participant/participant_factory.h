@@ -43,7 +43,6 @@ extern "C" {
  * @brief factory class used in creation of an RTPS Participant_t
  */
 #define MAX_NUMBER_PARTICIPANTS 1
-#define NO_PARTICIPANTS_ACTIVE -1
 typedef struct ParticipantFactory_t {
   Participant_t *(*CreateParticipant)(struct ParticipantFactory_t *, ParticipantAttributes_t *);
   Participant_t *participant_list[MAX_NUMBER_PARTICIPANTS];

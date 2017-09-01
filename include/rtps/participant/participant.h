@@ -56,7 +56,7 @@ typedef struct ParticipantAttributes_t {
 typedef struct Participant_t {
   GUID_t guid;
   ProtocolVersion_t protocolVersion;
-  VendorId_t vendorId;
+  RTPS_VendorId_t vendorId;
   ParticipantAttributes_t attributes;
   Locator_t *defaultUnicastLocatorList;
   Locator_t *defaultMulticastLocatorList;

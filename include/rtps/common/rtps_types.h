@@ -53,10 +53,10 @@ extern "C"{
  * Standard (IETF RFC 1305). In this representation, time is expressed in seconds and fraction
  * of seconds using the formula:
  */
-typedef struct Time_t {
+typedef struct RTPS_Time_t {
   long seconds; // time in seconds
   unsigned long fraction; // time in sec/2^32
-} Time_t;
+} RTPS_Time_t;
 
 // reserved time values:
 #define TIME_ZERO {0, 0}
@@ -65,12 +65,12 @@ typedef struct Time_t {
 
 /**
  * @defgroup VendorIDs
- *  the vendor id bytes of OMG RTPS vendors.  The VENDORID_TIY_RTPS is 117, 17 chosen arbitrarily
+ *  the vendor id bytes of OMG RTPS vendors.  The RTPS_VendorId_tIY_RTPS is 117, 17 chosen arbitrarily
  * @{
  */
 #define SIZE_VENDOR_ID 2
 #define VENDORID_UNKNOWN {0,0}
-#define VENDORID_TINY_RTPS {0x75, 0x11}
+#define RTPS_VendorId_tINY_RTPS {0x75, 0x11}
 /** @} */ // end VendorIds
 
 /**
@@ -78,9 +78,9 @@ typedef struct Time_t {
  * the RTPS protocol and allows this vendor to add specific extensions to the
  * protocol.
  */
-typedef struct VendorId_t {
+typedef struct RTPS_VendorId_t {
   octet vendorId[SIZE_VENDOR_ID];
-} VendorId_t;
+} RTPS_VendorId_t;
 
 // Reserved vendor ID and current vendor IDs
 #define VENDORID_UNKNOWN {0,0}
@@ -93,19 +93,19 @@ typedef struct VendorId_t {
  * sequence number type contains bytes which map to a value
  * seq_num = high * 2^32 + low
  */
-typedef struct SequenceNumber_t {
+typedef struct RTPS_SequenceNumber_t {
   long high;
   unsigned long low;
-} SequenceNumber_t;
+} RTPS_SequenceNumber_t;
 #define SEQUENCE_NUMBER_UNKNOWN {-1,0}
 
 /**
  * @brief A fragment number is a 32-bit unsigned integer and is used by
  * Submessages to identify a particular fragment in fragmented serialized data.
  */
-typedef struct FragmentNumber_t {
+typedef struct RTPS_FragmentNumber_t {
   unsigned long value;
-} FragmentNumber_t;
+} RTPS_FragmentNumber_t;
 
 
 #define SIZE_LOCATOR_ADDRESS 16
@@ -278,7 +278,7 @@ typedef struct ParameterList_t{
  */
 typedef struct OriginalWriterInfo_t {
   GUID_t originalWriterGUID;
-  SequenceNumber_t originalWriterSN;
+  RTPS_SequenceNumber_t originalWriterSN;
   ParameterList_t originalWriterQos;
 } OriginalWriterInfo_t;
 
@@ -316,7 +316,7 @@ typedef struct LocatorUDPv4_t {
  */
  #define SIZE_SEQUENCE_NUM_SET_BITMAP 8
 typedef struct SequenceNumberSet_t {
-  SequenceNumber_t bitmapBase;
+  RTPS_SequenceNumber_t bitmapBase;
   uint32_t numBits;
   int32_t bitmap[8];
 } SequenceNumberSet_t;

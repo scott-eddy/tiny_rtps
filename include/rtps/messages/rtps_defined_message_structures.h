@@ -63,7 +63,7 @@
  typedef struct RTPS_Header_t {
    octet prefix[SIZE_RTPS_HEADER_PREFIX]; //Always 'R','T','P','S'
    ProtocolVersion_t version;
-   VendorId_t vendorId;
+   RTPS_VendorId_t vendorId;
    GuidPrefix_t guidPrefix;
  } RTPS_Header_t;
 

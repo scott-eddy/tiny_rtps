@@ -45,7 +45,7 @@ static ParticipantFactory_t *participant_factory_singleton = NULL;
  * @param guid_prefix_value: a pointer to the GuidPrefix to be altered
  */
 static void RTPS_AssignGuidPrefixTinyVendorId(GuidPrefix_t *guid_prefix) {
-  VendorId_t tiny_rtps_id = {VENDORID_TINY_RTPS};
+  RTPS_VendorId_t tiny_rtps_id = {RTPS_VendorId_tINY_RTPS};
   memcpy(&guid_prefix->value[0], &tiny_rtps_id, sizeof(tiny_rtps_id));
 }
 
@@ -54,6 +54,7 @@ static void RTPS_AssignGuidPrefixTinyVendorId(GuidPrefix_t *guid_prefix) {
  */
 Participant_t *CreateParticipant(ParticipantFactory_t *factory, ParticipantAttributes_t *attributes) {
   if (factory->number_active_participants < MAX_NUMBER_PARTICIPANTS) {
+    // TODO don't malloc here
     Participant_t *participant = (Participant_t *) malloc(sizeof(Participant_t));
     memset(participant, 0, sizeof(*participant));
     RTPS_AssignGuidPrefixTinyVendorId(&participant->guid.guidPrefix);
@@ -61,7 +62,7 @@ Participant_t *CreateParticipant(ParticipantFactory_t *factory, ParticipantAttri
     participant->protocolVersion = (ProtocolVersion_t) PROTOCOLVERSION;
 
     factory->number_active_participants++;
-    factory->participant_list[factory->number_active_participants] = participant;
+    factory->participant_list[factory->number_active_participants - 1] = participant;
     return participant;
   } else {
     // TODO how to error
@@ -81,6 +82,7 @@ RTPS_ReturnCode_t ParticipantFactory_Finalize() {
   } else {
     // TODO don't blindly free here, need to check that all participants created by factory are destroyed properly
     free(participant_factory_singleton);
+    participant_factory_singleton = NULL;
     ret = RTPS_RETCODE_OK;
   }
   return ret;
@@ -93,7 +95,7 @@ RTPS_ReturnCode_t RTPS_ParticipantFactory_Init() {
     participant_factory_singleton =
         (ParticipantFactory_t *) malloc(sizeof(ParticipantFactory_t));
     participant_factory_singleton->CreateParticipant = &CreateParticipant;
-    participant_factory_singleton->number_active_participants = NO_PARTICIPANTS_ACTIVE;
+    participant_factory_singleton->number_active_participants = 0;
     for (int i = 0; i < MAX_NUMBER_PARTICIPANTS; ++i) {
       participant_factory_singleton->participant_list[i] = NULL;
     }

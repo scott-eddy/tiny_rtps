@@ -36,17 +36,16 @@ project(tiny_rtps)
 # Make all the warnings
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/enable_strict_warnings.cmake)
 
-
-if(NOT WIN32)
+if (NOT WIN32)
   # TODO: Toolchain native needs to support windows builds better
   include(${CMAKE_CURRENT_LIST_DIR}/cmake/toolchains/Toolchain-native.cmake)
-endif()
+endif ()
 
 # Note: for development purposes on visual studio if you want to launch
 # an example in debug mode you need to set this variable from
 # THIS CMakeList.txt, as it is the one that calls project()
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-              PROPERTY VS_STARTUP_PROJECT win32_socket)
+    PROPERTY VS_STARTUP_PROJECT win32_socket)
 #-------------------- Build Configuration Variables  -------------------------#
 #set(BUILD_NUTTX FALSE CACHE BOOL Enabling this will build NuttX)
 set(BUILD_NUTTX FALSE CACHE BOOL "Enabling this will build NuttX,
@@ -55,23 +54,19 @@ set(BUILD_NUTTX FALSE CACHE BOOL "Enabling this will build NuttX,
 set(BUILD_TESTS TRUE CACHE BOOL "Enabling this will build Gtest unit tests")
 
 set(BUILD_EXAMPLES false CACHE BOOL
-                      "Enabling this will build the examples in src/examples")
+    "Enabling this will build the examples in src/examples")
 set(BUILD_DOCS TRUE CACHE BOOL "Generate Doxygen Files to doc/doxygen")
 
 set(BUILD_COVERAGE FALSE CACHE BOOL "Generate covearge with gcov and lcov")
 
-if(BUILD_NUTTX)
- include(cmake/nuttx/nuttx_config_and_build.cmake)
-endif()
-
-if(BUILD_COVERAGE)
+if (BUILD_COVERAGE)
   include(${CMAKE_CURRENT_LIST_DIR}/cmake/code_coverage.cmake)
   APPEND_COVERAGE_COMPILER_FLAGS()
-endif()
-#-------------------- Tiny RTPS Sources  -------------------------#
+endif ()
 
+#-------------------- Tiny RTPS Sources  -------------------------#
 add_library(rtps_lib
-${CMAKE_CURRENT_LIST_DIR}/src/rtps/participant/participant_factory.c)
+    ${CMAKE_CURRENT_LIST_DIR}/src/rtps/participant/participant_factory.c)
 set_property(TARGET rtps_lib PROPERTY C_STANDARD 11)
 target_include_directories(rtps_lib PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/include/rtps/common
@@ -83,24 +78,18 @@ target_include_directories(rtps_lib PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/include/system_abstraction/memory
     )
 
+#------------------ Build remaining goodies ----------------------#
 # Allow for controlling of building the test code or not
-if (NOT BUILD_NUTTX)
-  # NuttX switches the C & C++ Toolchain to be arm-none-eabi which doesn't
-  # include threads.
-  # TODO Here we should change back such that we can build NuttX
-  # and still build unit tests
-  if(BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(tests)
-  endif()
-endif()
+if (BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(tests)
+endif ()
 
 # Allow for building the examples or not
-if(BUILD_EXAMPLES)
+if (BUILD_EXAMPLES)
   add_subdirectory(src/examples)
-endif()
+endif ()
 
-
-if(BUILD_DOCS)
- include(cmake/doxygen.cmake)
-endif()
+if (BUILD_DOCS)
+  include(cmake/doxygen.cmake)
+endif ()
