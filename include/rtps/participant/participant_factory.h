@@ -30,41 +30,49 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ***************************************************************************/
-#ifndef TINY_RTPS_PARTICIPANT_H
-#define TINY_RTPS_PARTICIPANT_H
+#ifndef TINY_RTPS_PARTICIPANT_FACTORY_H
+#define TINY_RTPS_PARTICIPANT_FACTORY_H
 
-#include "rtps_types.h"
-#include "reader.h"
-#include "writer.h"
-#include "return_codes.h"
+#include "participant.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * @brief Attributes not dictated by the RTPS specificatin but necessary for the
- * implementation of the protocol
+ * @brief factory class used in creation of an RTPS Participant_t
  */
-typedef struct ParticipantAttributes_t {
-  unsigned int domain_id;
-} ParticipantAttributes_t;
+#define MAX_NUMBER_PARTICIPANTS 1
+#define NO_PARTICIPANTS_ACTIVE -1
+typedef struct ParticipantFactory_t {
+  Participant_t *(*CreateParticipant)(struct ParticipantFactory_t *, ParticipantAttributes_t *);
+  Participant_t *participant_list[MAX_NUMBER_PARTICIPANTS];
+  int number_active_participants;
+} ParticipantFactory_t;
 
 /**
- * @brief an RTPS participant
+ * @brief Returns a pointer to the instance of the ParticipantFactory.  If the factory has not yet
+ *        been initialized it will return NULL
+ * @return pointer to the instance of the ParticipantFactory, NULL if factory has not been initialized
  */
-typedef struct Participant_t {
-  GUID_t guid;
-  ProtocolVersion_t protocolVersion;
-  VendorId_t vendorId;
-  ParticipantAttributes_t attributes;
-  Locator_t *defaultUnicastLocatorList;
-  Locator_t *defaultMulticastLocatorList;
-  RTPS_Writer_t *writer_list;
-  RTPS_Reader_t *reader_list;
-} Participant_t;
+ParticipantFactory_t *ParticipantFactory_GetInstance(void);
+#define RTPS_ParticipantFactory ParticipantFactory_GetInstance()
+
+/**
+ * @brief Initializes the ParticipantFactory singleton.  This will allocate memory for the pointer
+ * @return Return code indicating success or failure of the operation
+ */
+RTPS_ReturnCode_t RTPS_ParticipantFactory_Init();
+
+/**
+ * @brief Destroys the instance of the ParticipantFactory singleton.  This should only be done once all of
+ *        the participants that the factory has created are also destroyed.  This will free the memory of
+ *        the pointer used for the factory
+ * @return Return code indicating success or failure of the operation
+ */
+RTPS_ReturnCode_t ParticipantFactory_Finalize();
 
 #ifdef __cplusplus
 }
 #endif
-#endif //TINY_RTPS_PARTICIPANT_H
+#endif //TINY_RTPS_PARTICIPANT_FACTORY_H

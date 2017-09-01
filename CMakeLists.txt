@@ -69,17 +69,19 @@ if(BUILD_COVERAGE)
   APPEND_COVERAGE_COMPILER_FLAGS()
 endif()
 #-------------------- Tiny RTPS Sources  -------------------------#
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/common
-                    ${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/messages
-                    ${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/participant
-                    ${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/reader
-                    ${CMAKE_CURRENT_SOURCE_DIR}/include/rtps/writer
-                  )
 
 add_library(rtps_lib
 ${CMAKE_CURRENT_LIST_DIR}/src/rtps/participant/participant_factory.c)
 set_property(TARGET rtps_lib PROPERTY C_STANDARD 11)
+target_include_directories(rtps_lib PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/include/rtps/common
+    ${CMAKE_CURRENT_LIST_DIR}/include/rtps/messages
+    ${CMAKE_CURRENT_LIST_DIR}/include/rtps/participant
+    ${CMAKE_CURRENT_LIST_DIR}/include/rtps/reader
+    ${CMAKE_CURRENT_LIST_DIR}/include/rtps/writer
 
+    ${CMAKE_CURRENT_LIST_DIR}/include/system_abstraction/memory
+    )
 
 # Allow for controlling of building the test code or not
 if (NOT BUILD_NUTTX)

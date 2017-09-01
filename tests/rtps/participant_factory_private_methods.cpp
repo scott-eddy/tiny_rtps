@@ -30,41 +30,35 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ***************************************************************************/
-#ifndef TINY_RTPS_PARTICIPANT_H
-#define TINY_RTPS_PARTICIPANT_H
-
-#include "rtps_types.h"
-#include "reader.h"
-#include "writer.h"
-#include "return_codes.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <gtest/gtest.h>
 
 /**
- * @brief Attributes not dictated by the RTPS specificatin but necessary for the
- * implementation of the protocol
+ * @brief We include the participant_factory C file to have access to the
+ * static methods defined within
  */
-typedef struct ParticipantAttributes_t {
-  unsigned int domain_id;
-} ParticipantAttributes_t;
+#include "participant_factory.c"
 
 /**
- * @brief an RTPS participant
+ * @brief Test that the tiny_rtps vendor id is correctly assigned to the first two
+ * bytes of the GuidPrefix on a cll to RTPS_AssignGuidPrefixTinyVendorId
  */
-typedef struct Participant_t {
-  GUID_t guid;
-  ProtocolVersion_t protocolVersion;
-  VendorId_t vendorId;
-  ParticipantAttributes_t attributes;
-  Locator_t *defaultUnicastLocatorList;
-  Locator_t *defaultMulticastLocatorList;
-  RTPS_Writer_t *writer_list;
-  RTPS_Reader_t *reader_list;
-} Participant_t;
+TEST(ParticipantFactoryPrivateTesting, VendorIdAssignment){
+  // Arrange
+  GuidPrefix_t prefix_to_assign = GUIDPREFIX_UNKNOWN;
+  VendorId_t expected_vendor_id = {VENDORID_TINY_RTPS};
 
-#ifdef __cplusplus
+  // Act
+  RTPS_AssignGuidPrefixTinyVendorId(&prefix_to_assign);
+
+  // Assert
+  ASSERT_EQ(expected_vendor_id.vendorId[0], prefix_to_assign.value[0]);
+  ASSERT_EQ(expected_vendor_id.vendorId[1], prefix_to_assign.value[1]);
+
 }
-#endif
-#endif //TINY_RTPS_PARTICIPANT_H
+
+int main(int argc, char **argv){
+  ::testing::InitGoogleTest(&argc, argv);
+  int ret = RUN_ALL_TESTS();
+  return 0;
+}
+

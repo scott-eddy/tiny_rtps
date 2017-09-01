@@ -31,39 +31,37 @@
  *
  ***************************************************************************/
 
-
-#include "participant.h"
+#include "participant_factory.h"
 #include <stdlib.h>
 #include <string.h>
 
 /**
  * @brief The static particpant factory object. This is accessed via the call to RTPS_ParticipantFactory_GetInstance()
  */
-static ParticipantFactory_t* participant_factory_singleton = NULL;
+static ParticipantFactory_t *participant_factory_singleton = NULL;
 
 /**
- * TODO good docs
- * @brief
- * @param guid_prefix_value
+ * @brief Assigns the first two values of a GuidPrefix.value to the tiny_rtps vendor ID.
+ * @param guid_prefix_value: a pointer to the GuidPrefix to be altered
  */
-void AssignTinyVendorId(octet* guid_prefix_value){
+static void RTPS_AssignGuidPrefixTinyVendorId(GuidPrefix_t *guid_prefix) {
   VendorId_t tiny_rtps_id = {VENDORID_TINY_RTPS};
-  memcpy(guid_prefix_value, &tiny_rtps_id, sizeof(tiny_rtps_id));
+  memcpy(&guid_prefix->value[0], &tiny_rtps_id, sizeof(tiny_rtps_id));
 }
 
 /**
  * @brief TODO good docs
  */
-Participant_t* CreateParticipant(ParticipantFactory_t* factory, ParticipantAttributes_t* attributes){
-  if(factory->number_created_participants < MAX_NUMBER_PARTICIPANTS){
-    Participant_t* participant = malloc(sizeof(Participant_t));
+Participant_t *CreateParticipant(ParticipantFactory_t *factory, ParticipantAttributes_t *attributes) {
+  if (factory->number_active_participants < MAX_NUMBER_PARTICIPANTS) {
+    Participant_t *participant = (Participant_t *) malloc(sizeof(Participant_t));
     memset(participant, 0, sizeof(*participant));
-    AssignTinyVendorId(participant->guid.guidPrefix.value);
+    RTPS_AssignGuidPrefixTinyVendorId(&participant->guid.guidPrefix);
     participant->guid.entityId = (EntityId_t) ENTITYID_PARTICIPANT;
-    participant->protocolVersion = (ProtocolVersion_t)PROTOCOLVERSION;
+    participant->protocolVersion = (ProtocolVersion_t) PROTOCOLVERSION;
 
-    factory->number_created_participants++;
-    factory->participant_list[factory->number_created_participants] = participant;
+    factory->number_active_participants++;
+    factory->participant_list[factory->number_active_participants] = participant;
     return participant;
   } else {
     // TODO how to error
@@ -72,32 +70,36 @@ Participant_t* CreateParticipant(ParticipantFactory_t* factory, ParticipantAttri
 
 }
 
-ParticipantFactory_t* ParticipantFactory_GetInstance(void){
-  if(participant_factory_singleton == NULL) {
-    participant_factory_singleton = malloc(sizeof(ParticipantFactory_t)); //TODO dont malloc here, instead abstract
-    participant_factory_singleton->CreateParticipant = &CreateParticipant;
-    participant_factory_singleton->number_created_participants = NO_PARTICIPANTS_CREATED;
-    for(int i = 0; i < MAX_NUMBER_PARTICIPANTS; ++i) {
-      participant_factory_singleton->participant_list[i] = NULL;
-    }
-  }
+ParticipantFactory_t *ParticipantFactory_GetInstance(void) {
   return participant_factory_singleton;
 }
 
-
-
-/**
- * @brief TODO good docs
- * @return
- */
 RTPS_ReturnCode_t ParticipantFactory_Finalize() {
   RTPS_ReturnCode_t ret = RTPS_RETCODE_ERROR;
   if (participant_factory_singleton == NULL) {
     ret = RTPS_RETCODE_OK;
   } else {
-    free(participant_factory_singleton); // TODO don't blindly free here, need to check that all participants created by factory are destroyed properly
+    // TODO don't blindly free here, need to check that all participants created by factory are destroyed properly
+    free(participant_factory_singleton);
     ret = RTPS_RETCODE_OK;
   }
   return ret;
 }
 
+RTPS_ReturnCode_t RTPS_ParticipantFactory_Init() {
+  RTPS_ReturnCode_t ret = RTPS_RETCODE_ERROR;
+  if (participant_factory_singleton == NULL) {
+    //TODO dont malloc here, instead abstract
+    participant_factory_singleton =
+        (ParticipantFactory_t *) malloc(sizeof(ParticipantFactory_t));
+    participant_factory_singleton->CreateParticipant = &CreateParticipant;
+    participant_factory_singleton->number_active_participants = NO_PARTICIPANTS_ACTIVE;
+    for (int i = 0; i < MAX_NUMBER_PARTICIPANTS; ++i) {
+      participant_factory_singleton->participant_list[i] = NULL;
+    }
+    ret = RTPS_RETCODE_OK;
+  } else {
+    ret = RTPS_RETCODE_ERROR;
+  }
+  return ret;
+}

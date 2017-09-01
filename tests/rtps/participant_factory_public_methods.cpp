@@ -30,41 +30,43 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ***************************************************************************/
-#ifndef TINY_RTPS_PARTICIPANT_H
-#define TINY_RTPS_PARTICIPANT_H
+#include <gtest/gtest.h>
+#include "participant_factory.h"
 
-#include "rtps_types.h"
-#include "reader.h"
-#include "writer.h"
-#include "return_codes.h"
+TEST(ParticipantFactoryPublicTesting, FactoryCreation){
+  // Arrange
+  RTPS_ReturnCode_t ret = RTPS_RETCODE_ERROR;
+  if(RTPS_ParticipantFactory) {
+    ret = ParticipantFactory_Finalize();
+    ASSERT_EQ(RTPS_RETCODE_OK, ret) << "Invalid test, problem setting up static instance of participant factory";
+  }
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+  // Act
+  ret = RTPS_ParticipantFactory_Init();
 
-/**
- * @brief Attributes not dictated by the RTPS specificatin but necessary for the
- * implementation of the protocol
- */
-typedef struct ParticipantAttributes_t {
-  unsigned int domain_id;
-} ParticipantAttributes_t;
-
-/**
- * @brief an RTPS participant
- */
-typedef struct Participant_t {
-  GUID_t guid;
-  ProtocolVersion_t protocolVersion;
-  VendorId_t vendorId;
-  ParticipantAttributes_t attributes;
-  Locator_t *defaultUnicastLocatorList;
-  Locator_t *defaultMulticastLocatorList;
-  RTPS_Writer_t *writer_list;
-  RTPS_Reader_t *reader_list;
-} Participant_t;
-
-#ifdef __cplusplus
+  // Assert
+  ASSERT_TRUE((ParticipantFactory_GetInstance() != NULL));
+  ASSERT_EQ(RTPS_RETCODE_OK, ret);
 }
-#endif
-#endif //TINY_RTPS_PARTICIPANT_H
+
+TEST(ParticipantFactoryPublicTesting, FactoryCreation){
+  // Arrange
+  RTPS_ReturnCode_t ret = RTPS_RETCODE_ERROR;
+  if(RTPS_ParticipantFactory) {
+    ret = ParticipantFactory_Finalize();
+    ASSERT_EQ(RTPS_RETCODE_OK, ret) << "Invalid test, problem setting up static instance of participant factory";
+  }
+
+  // Act
+  ret = RTPS_ParticipantFactory_Init();
+
+  // Assert
+  ASSERT_TRUE((ParticipantFactory_GetInstance() != NULL));
+  ASSERT_EQ(RTPS_RETCODE_OK, ret);
+}
+
+int main(int argc, char **argv){
+  ::testing::InitGoogleTest(&argc, argv);
+  int ret = RUN_ALL_TESTS();
+  return 0;
+}
