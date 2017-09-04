@@ -44,20 +44,26 @@ static RTPS_ParticipantFactory_t *participant_factory_singleton = NULL;
  * @brief Assigns the first two values of a GuidPrefix.value to the tiny_rtps vendor ID.
  * @param guid_prefix_value: a pointer to the GuidPrefix to be altered
  */
-static void RTPS_AssignGuidPrefixTinyVendorId(RTPS_GuidPrefix_t *guid_prefix) {
+static void RTPS_AssignGuidPrefixTinyVendorId(RTPS_VendorId_t *vendor_id_to_assign) {
   RTPS_VendorId_t tiny_rtps_id = {RTPS_VendorId_tINY_RTPS};
-  memcpy(&guid_prefix->value[0], &tiny_rtps_id, sizeof(tiny_rtps_id));
+  memcpy(vendor_id_to_assign, &tiny_rtps_id, sizeof(tiny_rtps_id));
 }
 
 /**
- * @brief TODO good docs
+ * @brief creates an RTPS participant with the attributes given in RTPS_ParticipantAttributes.
+ *
+ * Assigns the guidPrefix leading two bytes to the proper vendor id, set the protocalVersion
+ * To the latest as specified by the macro PROTOCOLVERSION,
+ *
+ * Finally append the participant to the participant factory list and increment the number of
+ * active participants
  */
 RTPS_Participant_t *CreateParticipant(RTPS_ParticipantFactory_t *factory, RTPS_ParticipantAttributes_t *attributes) {
   if (factory->number_active_participants < MAX_NUMBER_PARTICIPANTS) {
     // TODO don't malloc here
     RTPS_Participant_t *participant = (RTPS_Participant_t *) malloc(sizeof(RTPS_Participant_t));
     memset(participant, 0, sizeof(*participant));
-    RTPS_AssignGuidPrefixTinyVendorId(&participant->guid.guidPrefix);
+    RTPS_AssignGuidPrefixTinyVendorId((RTPS_VendorId_t*)&participant->guid.guidPrefix.value[0]);
     participant->guid.entityId = (RTPS_EntityId_t) ENTITYID_PARTICIPANT;
     participant->protocolVersion = (RTPS_ProtocolVersion_t) PROTOCOLVERSION;
 

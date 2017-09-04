@@ -57,7 +57,7 @@ set(BUILD_EXAMPLES false CACHE BOOL
     "Enabling this will build the examples in src/examples")
 set(BUILD_DOCS TRUE CACHE BOOL "Generate Doxygen Files to doc/doxygen")
 
-set(BUILD_COVERAGE FALSE CACHE BOOL "Generate covearge with gcov and lcov")
+set(BUILD_COVERAGE TRUE CACHE BOOL "Generate covearge with gcov and lcov")
 
 if (BUILD_COVERAGE)
   include(${CMAKE_CURRENT_LIST_DIR}/cmake/code_coverage.cmake)

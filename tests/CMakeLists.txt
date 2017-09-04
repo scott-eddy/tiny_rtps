@@ -42,6 +42,7 @@ add_executable(participant_public_creation_tests rtps/participant_factory_public
 target_compile_definitions(participant_public_creation_tests PUBLIC
     DYNAMIC_STRING_ALLOCATION)
 target_link_libraries(participant_public_creation_tests rtps_lib ${GTEST_BOTH_LIBRARIES})
+add_test(participant_public_creation_test participant_public_creation_tests)
 
 add_executable(participant_private_creation_tests rtps/participant_factory_private_methods.cpp)
 target_compile_definitions(participant_private_creation_tests PUBLIC
@@ -50,12 +51,14 @@ target_compile_definitions(participant_private_creation_tests PUBLIC
 target_include_directories(participant_private_creation_tests PRIVATE
     ${CMAKE_SOURCE_DIR}/src/rtps/participant)
 target_link_libraries(participant_private_creation_tests rtps_lib ${GTEST_BOTH_LIBRARIES})
-# Don't include /usr libraries in coverage
+add_test(participant_private_creation_tests participant_private_creation_tests)
+
+# Don't include /usr libraries in coverage, otherwise rely on the CMake add_test to bundle all of the
+# tests into one single target that we can then execute
 if(BUILD_COVERAGE)
   set(COVERAGE_EXCLUDES '/usr/*')
    SETUP_TARGET_FOR_COVERAGE(
-       NAME coverage_participants                    # New target name
-       EXECUTABLE participant_creation_tests -j ${PROCESSOR_COUNT} # Executable in PROJECT_BINARY_DIR
-       DEPENDENCIES participant_creation_tests                     # Dependencies to build first
+       NAME test_coverage                    # New target name
+       EXECUTABLE ctest -j ${PROCESSOR_COUNT} # Executable in PROJECT_BINARY_DIR
    )
 endif()

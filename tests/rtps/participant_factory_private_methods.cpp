@@ -44,15 +44,15 @@
  */
 TEST(ParticipantFactoryPrivateTesting, VendorIdAssignment){
   // Arrange
-  RTPS_GuidPrefix_t prefix_to_assign = GUIDPREFIX_UNKNOWN;
-  RTPS_VendorId_t expected_vendor_id = {RTPS_VendorId_tINY_RTPS};
+  RTPS_VendorId_t vendor_to_assign = VENDORID_UNKNOWN;
+  RTPS_VendorId_t expected_vendor_id = RTPS_VendorId_tINY_RTPS;
 
   // Act
-  RTPS_AssignGuidPrefixTinyVendorId(&prefix_to_assign);
+  RTPS_AssignGuidPrefixTinyVendorId(&vendor_to_assign);
 
   // Assert
-  ASSERT_EQ(expected_vendor_id.vendorId[0], prefix_to_assign.value[0]);
-  ASSERT_EQ(expected_vendor_id.vendorId[1], prefix_to_assign.value[1]);
+  ASSERT_EQ(expected_vendor_id.vendorId[0], vendor_to_assign.vendorId[0]);
+  ASSERT_EQ(expected_vendor_id.vendorId[1], vendor_to_assign.vendorId[1]);
 
 }
 
