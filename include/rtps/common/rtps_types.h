@@ -113,23 +113,23 @@ typedef struct RTPS_FragmentNumber_t {
  * @brief Used to give the port and address of the underlying transport layer,
  *        which is stored in the kind field
  *
- * If the Locator_t kind is LOCATOR_KIND_UDPv4, the address contains an IPv4
+ * If the RTPS_Locator_t kind is LOCATOR_KIND_UDPv4, the address contains an IPv4
  * address. In this case the leading 12 octets of the address must be zero. The
  * last 4 octets are used to store the IPv4 address. The mapping between the
  * dot-notation “a.b.c.d” of an IPv4 address and its representation in the
- * address field of a Locator_t is:
+ * address field of a RTPS_Locator_t is:
  * address = (0,0,0,0,0,0,0,0,0,0,0,0,a,b,c,d}
- * If the Locator_t kind is LOCATOR_KIND_UDPv6, the address contains an IPv6
+ * If the RTPS_Locator_t kind is LOCATOR_KIND_UDPv6, the address contains an IPv6
  * address. IPv6 addresses typically use a shorthand hexadecimal notation that
  * maps one-to-one to the 16 octets in the address field.
  * For example the representation of the IPv6 address “FF00:4501:0:0:0:0:0:32” is:
  * address = (0xff,0,0x45,0x01,0,0,0,0,0,0,0,0,0,0,0,0x32}
  */
-typedef struct Locator_t {
+typedef struct RTPS_Locator_t {
   long kind;
   unsigned long port;
   octet address[SIZE_LOCATOR_ADDRESS];
-} Locator_t;
+} RTPS_Locator_t;
 
 #define LOCATOR_KIND_INVALID -1
 #define LOCATOR_ADDRESS_INVALID {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
@@ -145,9 +145,9 @@ typedef struct Locator_t {
  * not the topic has defined some fields within to be used as the 'Key' that
  * identifies data-instances within the topic
  */
-typedef struct TopicKind_t {
+typedef struct RTPS_TopicKind_t {
   long value;
-} TopicKind_t;
+} RTPS_TopicKind_t;
 #define TOPIC_KIND_NO_KEY 1
 #define TOPIC_KIND_WITH_KEY 2
 
@@ -156,9 +156,9 @@ typedef struct TopicKind_t {
  * It can take the values:
  * BEST_EFFORT, RELIABLE.
  */
-typedef struct ReliabilityKind_t {
+typedef struct RTPS_ReliabilityKind_t {
   long value;
-} ReliabilityKind_t;
+} RTPS_ReliabilityKind_t;
 #define RELIABILITY_KIND_BEST_EFFORT 1
 #define RELIABILITY_KIND_RELIABLE 3
 
@@ -166,18 +166,18 @@ typedef struct ReliabilityKind_t {
  * @brief Type used to encapsulate a count that is incremented monotonically,
  * used to identify message duplicates.
  */
-typedef struct Count_t {
+typedef struct RTPS_Count_t {
   long value;
-} Count_t;
+} RTPS_Count_t;
 
 /**
  * @brief Type used to represent the version of the RTPS protocol. The version
  * is composed of a major and a minor version number.
  */
-typedef struct ProtocolVersion_t {
+typedef struct RTPS_ProtocolVersion_t {
   octet major;
   octet minor;
-} ProtocolVersion_t;
+} RTPS_ProtocolVersion_t;
 #define PROTOCOLVERSION_1_0 {1,0}
 #define PROTOCOLVERSION_1_1 {1,1}
 #define PROTOCOLVERSION_2_0 {2,0}
@@ -192,17 +192,17 @@ typedef struct ProtocolVersion_t {
  * data-object that is being changed within the set of objects that have been
  * registered by the DDS DataWriter
  */
-typedef struct KeyHash_t {
+typedef struct RTPS_KeyHash_t {
   octet value[SIZE_KEY_HASH_VALUE];
-} KeyHash_t;
+} RTPS_KeyHash_t;
 
 #define SIZE_STATUS_INFO_VALUE 4
 /**
  * @breif //TODO PID_STATUS_INFO, RTPS spec not specific about what this is
  */
-typedef struct StatusInfo_t {
+typedef struct RTPS_StatusInfo_t {
   octet value[SIZE_STATUS_INFO_VALUE];
-} StatusInfo_t;
+} RTPS_StatusInfo_t;
 
 /**
  * @brief Type used to uniquely identify a parameter in a parameter list.
@@ -210,79 +210,79 @@ typedef struct StatusInfo_t {
  * A range of values is reserved for protocol-defined parameters, while another
  * range can be used for vendor-defined parameters
  */
-typedef struct ParameterId_t {
+typedef struct RTPS_ParameterId_t {
   short value;
-} ParameterId_t;
+} RTPS_ParameterId_t;
 
 #define SIZE_CONTENT_FILTER_STRING 256
 /**
- * @brief The ContentFilterProperty_t field provides all the required
+ * @brief The RTPS_ContentFilterProperty_t field provides all the required
  * information to enable content filtering on the Writer side.
  */
-typedef struct ContentFilterProperty_t {
+typedef struct RTPS_ContentFilterProperty_t {
   octet contentFilteredTopicName[SIZE_CONTENT_FILTER_STRING];
   octet relatedTopicName[SIZE_CONTENT_FILTER_STRING];
   octet filterClassName[SIZE_CONTENT_FILTER_STRING];
   RtpsString_t *expressionParameters; //TODO Eddy 2017, this is a string table, how best to handle this in C
   RtpsString_t filterExpression;
-} ContentFilterProperty_t;
+} RTPS_ContentFilterProperty_t;
 
 
 #define SIZE_FILTER_SIGNATURE_RESULT 4
 /**
  * @brief The inline Qos element of the Data submessage is used to include the
- * necessary filter information, this is added via adding a ContentFilterInfo_t
+ * necessary filter information, this is added via adding a RTPS_ContentFilterInfo_t
  */
-typedef struct ContentFilterInfo_t {
+typedef struct RTPS_ContentFilterInfo_t {
   long * filterResult;
   size_t size_filter_result_array;
   long* filterSignatures; // Array of long[SIZE_FILTER_SIGNATURE_RESULT]
   size_t size_filter_signatures_array;
-} ContentFilterInfo_t;
+} RTPS_ContentFilterInfo_t;
 
 /**
  * @brief //TODO Eddy 8/2017, the spec documentation on this type is lacking
  */
-typedef struct Property_t {
+typedef struct RTPS_Property_t {
   RtpsString_t name;
   RtpsString_t value;
-} Property_t;
+} RTPS_Property_t;
 
 /**
  * @brief A string used to give a given RTPS entity a human readable name
  */
-typedef struct EntityName_t {
+typedef struct RTPS_EntityName_t {
   RtpsString_t name;
-} EntityName_t;
+} RTPS_EntityName_t;
 
 /**
  * @breif structure to hold information about a specific parameter
  */
-typedef struct Parameter_t {
-  ParameterId_t parameterId;
+typedef struct RTPS_Parameter_t {
+  RTPS_ParameterId_t parameterId;
   short length;
   octet value[];
-} Parameter_t;
+} RTPS_Parameter_t;
 
 /**
  * @breif A list of parameters, this is used in several messages such as
- *        OriginalWriterInfo_t
+ *        RTPS_OriginalWriterInfo_t
  */
-typedef struct ParameterList_t{
+typedef struct RTPS_ParameterList_t{
   size_t size_of_parameter_list;
-  Parameter_t* parameter;
-}ParameterList_t;
+  RTPS_Parameter_t* parameter;
+}RTPS_ParameterList_t;
 
 /**
  * @breif Data about the original writer of the RTPS message
  */
-typedef struct OriginalWriterInfo_t {
-  GUID_t originalWriterGUID;
+typedef struct RTPS_OriginalWriterInfo_t {
+  RTPS_GUID_t originalWriterGUID;
   RTPS_SequenceNumber_t originalWriterSN;
-  ParameterList_t originalWriterQos;
-} OriginalWriterInfo_t;
+  RTPS_ParameterList_t originalWriterQos;
+} RTPS_OriginalWriterInfo_t;
 
-typedef unsigned long BuiltinEndpointSet_t;
+typedef unsigned long RTPS_BuiltinEndpointSet_t;
 #define DISC_BUILTIN_ENDPOINT_PARTICIPANT_ANNOUNCER 0x00000001 << 0;
 #define DISC_BUILTIN_ENDPOINT_PARTICIPANT_DETECTOR 0x00000001 << 1;
 #define DISC_BUILTIN_ENDPOINT_PUBLICATION_ANNOUNCER 0x00000001 << 2;
@@ -297,8 +297,8 @@ typedef unsigned long BuiltinEndpointSet_t;
 #define BUILTIN_ENDPOINT_PARTICIPANT_MESSAGE_DATA_READER 0x00000001 << 11;
 
 /**
- * @brief Specialization of Locator_t used to hold UDP IPv4 locators using a
- * more compact representation. Equivalent to Locator_t with kind set to
+ * @brief Specialization of RTPS_Locator_t used to hold UDP IPv4 locators using a
+ * more compact representation. Equivalent to RTPS_Locator_t with kind set to
  * LOCATOR_KIND_UDPv4.
  * Need only be able to hold an IPv4 address and a port number.
  *
@@ -306,20 +306,20 @@ typedef unsigned long BuiltinEndpointSet_t;
  * representation as an unsigned long is as follows:
  * address = (((a*256 + b)*256) + c)*256 + d
  */
-typedef struct LocatorUDPv4_t {
+typedef struct RTPS_LocatorUDPv4_t {
   unsigned long address;
   unsigned long port;
-} LocatorUDPv4_t;
+} RTPS_LocatorUDPv4_t;
 
 /**
  * @brief
  */
  #define SIZE_SEQUENCE_NUM_SET_BITMAP 8
-typedef struct SequenceNumberSet_t {
+typedef struct RTPS_SequenceNumberSet_t {
   RTPS_SequenceNumber_t bitmapBase;
   uint32_t numBits;
   int32_t bitmap[8];
-} SequenceNumberSet_t;
+} RTPS_SequenceNumberSet_t;
 
 #define LOCATORUDPv4_INVALID {0, 0}
 

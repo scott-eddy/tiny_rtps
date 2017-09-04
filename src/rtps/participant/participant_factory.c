@@ -38,13 +38,13 @@
 /**
  * @brief The static particpant factory object. This is accessed via the call to RTPS_ParticipantFactory_GetInstance()
  */
-static ParticipantFactory_t *participant_factory_singleton = NULL;
+static RTPS_ParticipantFactory_t *participant_factory_singleton = NULL;
 
 /**
  * @brief Assigns the first two values of a GuidPrefix.value to the tiny_rtps vendor ID.
  * @param guid_prefix_value: a pointer to the GuidPrefix to be altered
  */
-static void RTPS_AssignGuidPrefixTinyVendorId(GuidPrefix_t *guid_prefix) {
+static void RTPS_AssignGuidPrefixTinyVendorId(RTPS_GuidPrefix_t *guid_prefix) {
   RTPS_VendorId_t tiny_rtps_id = {RTPS_VendorId_tINY_RTPS};
   memcpy(&guid_prefix->value[0], &tiny_rtps_id, sizeof(tiny_rtps_id));
 }
@@ -52,14 +52,14 @@ static void RTPS_AssignGuidPrefixTinyVendorId(GuidPrefix_t *guid_prefix) {
 /**
  * @brief TODO good docs
  */
-Participant_t *CreateParticipant(ParticipantFactory_t *factory, ParticipantAttributes_t *attributes) {
+RTPS_Participant_t *CreateParticipant(RTPS_ParticipantFactory_t *factory, RTPS_ParticipantAttributes_t *attributes) {
   if (factory->number_active_participants < MAX_NUMBER_PARTICIPANTS) {
     // TODO don't malloc here
-    Participant_t *participant = (Participant_t *) malloc(sizeof(Participant_t));
+    RTPS_Participant_t *participant = (RTPS_Participant_t *) malloc(sizeof(RTPS_Participant_t));
     memset(participant, 0, sizeof(*participant));
     RTPS_AssignGuidPrefixTinyVendorId(&participant->guid.guidPrefix);
-    participant->guid.entityId = (EntityId_t) ENTITYID_PARTICIPANT;
-    participant->protocolVersion = (ProtocolVersion_t) PROTOCOLVERSION;
+    participant->guid.entityId = (RTPS_EntityId_t) ENTITYID_PARTICIPANT;
+    participant->protocolVersion = (RTPS_ProtocolVersion_t) PROTOCOLVERSION;
 
     factory->number_active_participants++;
     factory->participant_list[factory->number_active_participants - 1] = participant;
@@ -71,7 +71,7 @@ Participant_t *CreateParticipant(ParticipantFactory_t *factory, ParticipantAttri
 
 }
 
-ParticipantFactory_t *ParticipantFactory_GetInstance(void) {
+RTPS_ParticipantFactory_t *ParticipantFactory_GetInstance(void) {
   return participant_factory_singleton;
 }
 
@@ -93,7 +93,7 @@ RTPS_ReturnCode_t RTPS_ParticipantFactory_Init() {
   if (participant_factory_singleton == NULL) {
     //TODO dont malloc here, instead abstract
     participant_factory_singleton =
-        (ParticipantFactory_t *) malloc(sizeof(ParticipantFactory_t));
+        (RTPS_ParticipantFactory_t *) malloc(sizeof(RTPS_ParticipantFactory_t));
     participant_factory_singleton->CreateParticipant = &CreateParticipant;
     participant_factory_singleton->number_active_participants = 0;
     for (int i = 0; i < MAX_NUMBER_PARTICIPANTS; ++i) {

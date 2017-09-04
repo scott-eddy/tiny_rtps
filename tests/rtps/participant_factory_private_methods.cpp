@@ -44,7 +44,7 @@
  */
 TEST(ParticipantFactoryPrivateTesting, VendorIdAssignment){
   // Arrange
-  GuidPrefix_t prefix_to_assign = GUIDPREFIX_UNKNOWN;
+  RTPS_GuidPrefix_t prefix_to_assign = GUIDPREFIX_UNKNOWN;
   RTPS_VendorId_t expected_vendor_id = {RTPS_VendorId_tINY_RTPS};
 
   // Act

@@ -51,7 +51,7 @@ extern "C"{
 #define SIZE_ENTITY_ID_KEY 3
 /**
  * @defgroup RTPS_DEFINED_ENTITY_IDS
- * EntityId_t values fully predefined by the RTPS Protocol
+ * RTPS_EntityId_t values fully predefined by the RTPS Protocol
  * @{
  */
 #define ENTITYID_UNKNOWN {{0x00, 0x00, 0x00}, 0x00}
@@ -83,25 +83,25 @@ extern "C"{
  * guidPrefix[1] = vendorId[1]
  * Where vendorId is a value assigned by the Object Management Group
  */
-typedef struct GuidPrefix_t {
+typedef struct RTPS_GuidPrefix_t {
   octet value[SIZE_GUID_PREFIX];
-} GuidPrefix_t;
+} RTPS_GuidPrefix_t;
 
 /**
  * @brief The unique identifier of an endpoint within a participant.
  */
-typedef struct EntityId_t {
+typedef struct RTPS_EntityId_t {
   octet entityKey[SIZE_ENTITY_ID_KEY];
   octet entityKind;
-} EntityId_t;
+} RTPS_EntityId_t;
 
 /**
  * @brief The Globally Unique Identifier (GUID) for a given object on the RTPS network.
  */
-typedef struct GUID_t {
-  GuidPrefix_t guidPrefix;
-  EntityId_t entityId;
-} GUID_t;
+typedef struct RTPS_GUID_t {
+  RTPS_GuidPrefix_t guidPrefix;
+  RTPS_EntityId_t entityId;
+} RTPS_GUID_t;
 
 #ifdef __cplusplus
 }

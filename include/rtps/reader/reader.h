@@ -42,11 +42,11 @@ extern "C"{
 
 
 typedef struct RTPS_Reader_t {
-  GUID_t guid;
-  ReliabilityKind_t reliabilityLevel;
-  TopicKind_t topicKind;
-  Locator_t* unicastLocatorList;
-  Locator_t* multicastLocatorList;
+  RTPS_GUID_t guid;
+  RTPS_ReliabilityKind_t reliabilityLevel;
+  RTPS_TopicKind_t topicKind;
+  RTPS_Locator_t* unicastLocatorList;
+  RTPS_Locator_t* multicastLocatorList;
 } RTPS_Reader_t;
 
 #ifdef __cplusplus

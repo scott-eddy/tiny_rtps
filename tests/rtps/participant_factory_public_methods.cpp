@@ -39,7 +39,7 @@ TEST(ParticipantFactoryPublicTesting, ParticipantCreation) {
   if(RTPS_ParticipantFactory){
     FAIL() << "Invalid test, expected the RTPS Participant Factory to not exist";
   }
-  Participant_t* participant_ptr = NULL;
+  RTPS_Participant_t* participant_ptr = NULL;
 
 }
 

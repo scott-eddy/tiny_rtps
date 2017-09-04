@@ -40,21 +40,21 @@ extern "C" {
 #endif
 
 /**
- * @brief factory class used in creation of an RTPS Participant_t
+ * @brief factory class used in creation of an RTPS RTPS_Participant_t
  */
 #define MAX_NUMBER_PARTICIPANTS 1
-typedef struct ParticipantFactory_t {
-  Participant_t *(*CreateParticipant)(struct ParticipantFactory_t *, ParticipantAttributes_t *);
-  Participant_t *participant_list[MAX_NUMBER_PARTICIPANTS];
+typedef struct RTPS_ParticipantFactory_t {
+  RTPS_Participant_t *(*CreateParticipant)(struct RTPS_ParticipantFactory_t *, RTPS_ParticipantAttributes_t *);
+  RTPS_Participant_t *participant_list[MAX_NUMBER_PARTICIPANTS];
   int number_active_participants;
-} ParticipantFactory_t;
+} RTPS_ParticipantFactory_t;
 
 /**
  * @brief Returns a pointer to the instance of the ParticipantFactory.  If the factory has not yet
  *        been initialized it will return NULL
  * @return pointer to the instance of the ParticipantFactory, NULL if factory has not been initialized
  */
-ParticipantFactory_t *ParticipantFactory_GetInstance(void);
+RTPS_ParticipantFactory_t *ParticipantFactory_GetInstance(void);
 #define RTPS_ParticipantFactory ParticipantFactory_GetInstance()
 
 /**

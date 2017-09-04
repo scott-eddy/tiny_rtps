@@ -46,23 +46,23 @@ extern "C" {
  * @brief Attributes not dictated by the RTPS specificatin but necessary for the
  * implementation of the protocol
  */
-typedef struct ParticipantAttributes_t {
+typedef struct RTPS_ParticipantAttributes_t {
   unsigned int domain_id;
-} ParticipantAttributes_t;
+} RTPS_ParticipantAttributes_t;
 
 /**
  * @brief an RTPS participant
  */
-typedef struct Participant_t {
-  GUID_t guid;
-  ProtocolVersion_t protocolVersion;
+typedef struct RTPS_Participant_t {
+  RTPS_GUID_t guid;
+  RTPS_ProtocolVersion_t protocolVersion;
   RTPS_VendorId_t vendorId;
-  ParticipantAttributes_t attributes;
-  Locator_t *defaultUnicastLocatorList;
-  Locator_t *defaultMulticastLocatorList;
+  RTPS_ParticipantAttributes_t attributes;
+  RTPS_Locator_t *defaultUnicastLocatorList;
+  RTPS_Locator_t *defaultMulticastLocatorList;
   RTPS_Writer_t *writer_list;
   RTPS_Reader_t *reader_list;
-} Participant_t;
+} RTPS_Participant_t;
 
 #ifdef __cplusplus
 }

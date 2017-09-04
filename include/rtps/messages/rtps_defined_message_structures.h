@@ -62,9 +62,9 @@
  */
  typedef struct RTPS_Header_t {
    octet prefix[SIZE_RTPS_HEADER_PREFIX]; //Always 'R','T','P','S'
-   ProtocolVersion_t version;
+   RTPS_ProtocolVersion_t version;
    RTPS_VendorId_t vendorId;
-   GuidPrefix_t guidPrefix;
+   RTPS_GuidPrefix_t guidPrefix;
  } RTPS_Header_t;
 
 /**
@@ -119,10 +119,10 @@ typedef struct SubmessageHeader_t {
  */
 typedef struct AckNack_Submessage_t {
   SubmessageHeader_t header;
-  EntityId_t readerId;
-  EntityId_t writerId;
-  SequenceNumberSet_t readerSNState; // TODO Eddy 8/2017, This uses a sequence but we use a fixed size, how do we handle this?
-  Count_t count;
+  RTPS_EntityId_t readerId;
+  RTPS_EntityId_t writerId;
+  RTPS_SequenceNumberSet_t readerSNState; // TODO Eddy 8/2017, This uses a sequence but we use a fixed size, how do we handle this?
+  RTPS_Count_t count;
 } AckNack_Submessage_t;
 
 
