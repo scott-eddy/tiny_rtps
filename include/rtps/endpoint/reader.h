@@ -1,4 +1,4 @@
-/******************************************************************************
+/*****************************************************************************
  *   Copyright (C) 2017 Edward Scott. All rights reserved.
  *   Authors: Edward Scott <eddy.scott88@gmail.com>
  *
@@ -30,35 +30,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ***************************************************************************/
-#include <gtest/gtest.h>
 
-/**
- * @brief We include the participant_factory C file to have access to the
- * static methods defined within
- */
-#include "participant_factory.c"
+#ifndef TINY_RTPS_READER_H
+#define TINY_RTPS_READER_H
 
-/**
- * @brief Test that the tiny_rtps vendor id is correctly assigned to the first two
- * bytes of the GuidPrefix on a cll to RTPS_AssignGuidPrefixTinyVendorId
- */
-TEST(ParticipantFactoryPrivateTesting, VendorIdAssignment){
-  // Arrange
-  RTPS_VendorId_t vendor_to_assign = VENDORID_UNKNOWN;
-  RTPS_VendorId_t expected_vendor_id = RTPS_VendorId_tINY_RTPS;
+#include "endpoint.h"
 
-  // Act
-  RTPS_AssignGuidPrefixTinyVendorId(&vendor_to_assign);
+#ifdef __cplusplus
+extern "C"{
+#endif
 
-  // Assert
-  ASSERT_EQ(expected_vendor_id.vendorId[0], vendor_to_assign.vendorId[0]);
-  ASSERT_EQ(expected_vendor_id.vendorId[1], vendor_to_assign.vendorId[1]);
 
+typedef struct RTPS_Reader_t {
+  RTPS_GUID_t guid;
+  RTPS_ReliabilityKind_t reliabilityLevel;
+  RTPS_TopicKind_t topicKind;
+  RTPS_Locator_t* unicastLocatorList;
+  RTPS_Locator_t* multicastLocatorList;
+} RTPS_Reader_t;
+
+#ifdef __cplusplus
 }
-
-int main(int argc, char **argv){
-  ::testing::InitGoogleTest(&argc, argv);
-  int ret = RUN_ALL_TESTS();
-  return ret;
-}
-
+#endif
+#endif //TINY_RTPS_READER_H

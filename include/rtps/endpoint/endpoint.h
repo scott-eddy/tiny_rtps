@@ -30,9 +30,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ***************************************************************************/
-
-#ifndef TINY_RTPS_READER_H
-#define TINY_RTPS_READER_H
+#ifndef TINY_RTPS_ENDPOINT_H
+#define TINY_RTPS_ENDPOINT_H
 
 #include "rtps_types.h"
 
@@ -41,15 +40,16 @@ extern "C"{
 #endif
 
 
-typedef struct RTPS_Reader_t {
+typedef struct RTPS_Endpoint_t {
   RTPS_GUID_t guid;
   RTPS_ReliabilityKind_t reliabilityLevel;
   RTPS_TopicKind_t topicKind;
   RTPS_Locator_t* unicastLocatorList;
   RTPS_Locator_t* multicastLocatorList;
-} RTPS_Reader_t;
+} RTPS_Endpoint_t;
 
 #ifdef __cplusplus
 }
 #endif
-#endif //TINY_RTPS_READER_H
+
+#endif //TINY_RTPS_ENDPOINT_H
