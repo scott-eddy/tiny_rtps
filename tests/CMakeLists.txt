@@ -53,6 +53,16 @@ target_include_directories(participant_private_creation_tests PRIVATE
 target_link_libraries(participant_private_creation_tests rtps_lib ${GTEST_BOTH_LIBRARIES})
 add_test(participant_private_creation_tests participant_private_creation_tests)
 
+
+add_executable(guid_algorithm_test rtps/guid_calculation.cpp)
+target_compile_definitions(guid_algorithm_test PUBLIC
+        DYNAMIC_STRING_ALLOCATION
+        )
+target_include_directories(guid_algorithm_test PRIVATE
+        ${CMAKE_SOURCE_DIR}/src/rtps/participant)
+target_link_libraries(guid_algorithm_test rtps_lib ${GTEST_BOTH_LIBRARIES})
+add_test(guid_algorithms guid_algorithm_test)
+
 # Don't include /usr libraries in coverage, otherwise rely on the CMake add_test to bundle all of the
 # tests into one single target that we can then execute
 if(BUILD_COVERAGE)

@@ -63,11 +63,10 @@ RTPS_Participant_t *CreateParticipant(RTPS_ParticipantFactory_t *factory, RTPS_P
     // TODO don't malloc here
     RTPS_Participant_t *participant = (RTPS_Participant_t *) malloc(sizeof(RTPS_Participant_t));
     memset(participant, 0, sizeof(*participant));
-    RTPS_AssignGuidPrefixTinyVendorId((RTPS_VendorId_t*)&participant->guid.guidPrefix.value[0]);
+    RTPS_AssignGuidPrefixTinyVendorId((RTPS_VendorId_t *) &participant->guid.guidPrefix.value[0]);
     RTPS_AssignGuidPrefixTinyVendorId(&participant->vendorId);
     participant->guid.entityId = (RTPS_EntityId_t) ENTITYID_PARTICIPANT;
     participant->protocolVersion = (RTPS_ProtocolVersion_t) PROTOCOLVERSION;
-
 
     factory->number_active_participants++;
     factory->participant_list[factory->number_active_participants - 1] = participant;

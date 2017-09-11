@@ -36,16 +36,16 @@
 #include "rtps_types.h"
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
-
 
 typedef struct RTPS_Endpoint_t {
   RTPS_GUID_t guid;
   RTPS_ReliabilityKind_t reliabilityLevel;
   RTPS_TopicKind_t topicKind;
-  RTPS_Locator_t* unicastLocatorList;
-  RTPS_Locator_t* multicastLocatorList;
+  // TODO 9/17 These are lists, therefore currently they are pointers to the start of the list
+  RTPS_Locator_t *unicastLocatorList;
+  RTPS_Locator_t *multicastLocatorList;
 } RTPS_Endpoint_t;
 
 #ifdef __cplusplus

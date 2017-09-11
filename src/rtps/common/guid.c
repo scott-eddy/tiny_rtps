@@ -1,4 +1,4 @@
-/*****************************************************************************
+/******************************************************************************
  *   Copyright (C) 2017 Edward Scott. All rights reserved.
  *   Authors: Edward Scott <eddy.scott88@gmail.com>
  *
@@ -31,20 +31,23 @@
  *
  ***************************************************************************/
 
-#ifndef TINY_RTPS_READER_H
-#define TINY_RTPS_READER_H
-
-#include "endpoint.h"
-
 #ifdef __cplusplus
-extern "C" {
+extern "C"{
 #endif
 
-typedef struct RTPS_Reader_t {
-  RTPS_Endpoint_t endpoint_data;
-} RTPS_Reader_t;
+#include <rtps_types.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <printf.h>
+
+void GenerateGuidValue(RTPS_GuidPrefix_t* prefix_to_assign){
+  //int size_to_assign =  SIZE_GUID_PREFIX - SIZE_VENDOR_ID;
+  // TODO 9/17 process id is tots system specific, so is the assumption that its an int
+  int process_id = getpid();
+  printf("Process id is: %d\n, which is size %ld\n",process_id, sizeof(process_id));
+
+}
 
 #ifdef __cplusplus
 }
 #endif
-#endif //TINY_RTPS_READER_H

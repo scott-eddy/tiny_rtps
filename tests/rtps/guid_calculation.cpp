@@ -1,4 +1,4 @@
-/*****************************************************************************
+/******************************************************************************
  *   Copyright (C) 2017 Edward Scott. All rights reserved.
  *   Authors: Edward Scott <eddy.scott88@gmail.com>
  *
@@ -30,21 +30,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ***************************************************************************/
+#include <gtest/gtest.h>
+#include <guid.h>
+/**
+ * @brief tests that the guid creation algorithm works as expected
+ */
 
-#ifndef TINY_RTPS_READER_H
-#define TINY_RTPS_READER_H
-
-#include "endpoint.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct RTPS_Reader_t {
-  RTPS_Endpoint_t endpoint_data;
-} RTPS_Reader_t;
-
-#ifdef __cplusplus
+int main(int argc, char **argv){
+  RTPS_GuidPrefix_t debug;
+  GenerateGuidValue(&debug);
+  ::testing::InitGoogleTest(&argc, argv);
+  //int ret = RUN_ALL_TESTS();
+  //return ret;
+  return 0;
 }
-#endif
-#endif //TINY_RTPS_READER_H

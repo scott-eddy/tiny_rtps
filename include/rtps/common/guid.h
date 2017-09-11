@@ -103,6 +103,9 @@ typedef struct RTPS_GUID_t {
   RTPS_EntityId_t entityId;
 } RTPS_GUID_t;
 
+void GenerateGuidValue(RTPS_GuidPrefix_t* prefix_to_assign);
+
+
 #ifdef __cplusplus
 }
 #endif

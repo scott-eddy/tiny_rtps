@@ -34,14 +34,14 @@
 #ifndef TINY_RTPS_WRITER_H
 #define TINY_RTPS_WRITER_H
 
-#include "rtps_types.h"
+#include "endpoint.h"
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 typedef struct RTPS_Writer_t {
-  octet test;
+  RTPS_Endpoint_t endpoint_data;
 } RTPS_Writer_t;
 
 #ifdef __cplusplus

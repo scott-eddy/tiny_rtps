@@ -66,14 +66,15 @@ endif ()
 
 #-------------------- Tiny RTPS Sources  -------------------------#
 add_library(rtps_lib
-    ${CMAKE_CURRENT_LIST_DIR}/src/rtps/participant/participant_factory.c)
+    ${CMAKE_CURRENT_LIST_DIR}/src/rtps/participant/participant_factory.c
+     ${CMAKE_CURRENT_LIST_DIR}/src/rtps/common/guid.c)
+
 set_property(TARGET rtps_lib PROPERTY C_STANDARD 11)
 target_include_directories(rtps_lib PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/include/rtps/common
     ${CMAKE_CURRENT_LIST_DIR}/include/rtps/messages
     ${CMAKE_CURRENT_LIST_DIR}/include/rtps/participant
-    ${CMAKE_CURRENT_LIST_DIR}/include/rtps/reader
-    ${CMAKE_CURRENT_LIST_DIR}/include/rtps/writer
+    ${CMAKE_CURRENT_LIST_DIR}/include/rtps/endpoint
 
     ${CMAKE_CURRENT_LIST_DIR}/include/system_abstraction/memory
     )
